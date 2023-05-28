@@ -5,13 +5,14 @@ from tkinter import *
 devices = sd.query_devices()
 print(devices)
 
+
 def Voice_rec():
     fs = 48000
     # device_id = 0
     # seconds
     duration = 5
     sd.default.device = 0
-    myrecording = sd.rec(int(duration * fs), samplerate=fs, channels=2)#, device=device_id)
+    myrecording = sd.rec(int(duration * fs), samplerate=fs, channels=2)  # , device=device_id)
     sd.wait()
 
     # Save as WAV file at correct sampling rate
