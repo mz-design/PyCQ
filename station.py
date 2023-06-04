@@ -6,11 +6,14 @@
 # initial release: 30.05.2023 - MichaelZ
 # ---------------------------------------------------------------------------------------------------
 
+import os
 import constants
 import threading
 import logging
 from socket import socket, gethostbyname, gethostname
 from time import sleep
+
+import csv_ops
 import tcp_client
 from tcp_message import TcpMessage
 import http_srv
@@ -21,9 +24,16 @@ import listener
 import tcp_server
 from logger import Logger
 
-
 # Initialize logger
 logger = Logger(constants.LOG_FILE, level=constants.LOGGING_LEVEL)
+
+# initialize data stores, check if exists and create when needed
+directory = constants.MESSAGE_STORE
+if not os.path.exists(directory):
+    os.makedirs(directory)
+if not os.path.exists(constants.HISTORY):
+    csv_ops.open_csv_file(constants.HISTORY)
+
 
 # perform cleanups on startup
 cleanup.clean_log(constants.LOG_FILE, constants.LOG_MAX_LINES)

@@ -11,7 +11,8 @@ import threading
 import logging
 import socket
 import time
-
+import os
+import csv_ops
 import http_srv
 import keep_alive
 import announcer
@@ -22,6 +23,15 @@ from logger import Logger
 
 # Initialize logger
 logger = Logger(constants.LOG_FILE, level=constants.LOGGING_LEVEL)
+
+# initialize data stores, check if exists and create when needed
+directory = constants.MESSAGE_STORE
+if not os.path.exists(directory):
+    os.makedirs(directory)
+if not os.path.exists(constants.STATIONS):
+    csv_ops.open_csv_file(constants.STATIONS)
+if not os.path.exists(constants.HISTORY):
+    csv_ops.open_csv_file(constants.HISTORY)
 
 # perform cleanups on startup
 cleanup.clean_log(constants.LOG_FILE, constants.LOG_MAX_LINES)
