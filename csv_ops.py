@@ -37,7 +37,7 @@ def open_csv_file(filename):
         if filename == constants.STATIONS:
             fieldnames = 'IP', 'HOSTNAME'
         else:
-            fieldnames = 'TIME', 'ACTION', 'ITEM'
+            fieldnames = 'TIME', 'ACTION', 'HOSTNAME', 'IP', 'ITEM'
         with open(filename, 'w', newline='') as file:
             # Perform initial setup or write default data if needed
             writer = csv.DictWriter(file, fieldnames=fieldnames)
