@@ -9,7 +9,7 @@
 import constants
 import csv
 import csv_ops
-# import station
+from station_status import StationStatus
 import tcp_client
 from tcp_message import TcpMessage
 from announcer import gethostname, gethostbyname
@@ -26,7 +26,6 @@ my_ip = gethostbyname(gethostname())
 
 
 def process_message(data):
-    import station
     # Parse received message
     ip = TcpMessage.parse(data).ip
     hostname = TcpMessage.parse(data).hostname
@@ -62,7 +61,7 @@ def process_message(data):
 
     elif message == 'REGISTER_ACK':
         # station_update_status(status='online')
-        station.station_online = True
+        StationStatus.set_status('online')
         logger.add_log_entry(logging.INFO, f"'REGISTER_ACK' received from 'Caller'")
         logger.add_log_entry(logging.INFO, "Station status set ONLINE")
 

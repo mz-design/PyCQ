@@ -12,7 +12,7 @@ import threading
 import logging
 from socket import socket, gethostbyname, gethostname
 import time
-
+from station_status import StationStatus
 import csv_ops
 import tcp_client
 from tcp_message import TcpMessage
@@ -49,7 +49,7 @@ my_hostname = gethostname()
 my_ip = gethostbyname(gethostname())
 
 # Initially set station_status to OFFLINE
-station_online = False
+StationStatus.set_status('offline')
 logger.add_log_entry(logging.WARNING, f"Station {my_hostname} {my_ip} is OFFLINE")
 
 
