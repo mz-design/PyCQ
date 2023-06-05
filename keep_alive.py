@@ -39,27 +39,28 @@ def send_ping(destination):
 
 
 def check_alive():
+    global alive
     # open station list
     rows = csv_ops.open_csv_file(constants.STATIONS)
+    # set 'alive' flag to False before check
+    alive = False
     for row in rows:
         ip = row['IP']
         hostname = row['HOSTNAME']
-        print(ip, hostname)
-        if not send_ping(ip):
-            # station offline - remove entry from the list
-            logger.add_log_entry(logging.INFO, f'Station {hostname} with IP: {ip} keep alive false - remove entry')
+        if not send_ping(ip):   # station host is down - remove entry from the list (we need it to debug)
+            logger.add_log_entry(logging.ERROR, f'Station host {hostname} with IP: {ip} is DOWN - remove entry')
             # remove this row from .csv
             rows = [r for r in rows if r != row]
-        else:
-            # Encode 'KEEP_ALIVE'
-            data = TcpMessage.create(TcpMessage(my_ip, my_hostname, 'KEEP_ALIVE_REQ', asset="keep_alive"))
+        else:                   # Station host is up - check the 'station' process is alive (we also need it to debug)
+            logger.add_log_entry(logging.INFO, f'Station host {hostname} with IP: {ip} is UP - check process alive')
+            # Encode 'KEEP_ALIVE_REQ' signal
+            data = TcpMessage.create(TcpMessage(my_ip, my_hostname, 'KEEP_ALIVE_REQ', ''))
             # send to remote station
             tcp_client.start_client(ip, constants.TCP_PORT, data)
-            # wait a moment...
-            time.sleep(0.1)
-            # check 'alive' value if False - remove entry
-            if not alive:
-                logger.add_log_entry(logging.INFO, f'Station {hostname} with IP: {ip} keep alive false - remove entry')
+            # wait a moment for 'alive' flag update...
+            time.sleep(0.05)
+            if not alive:       # check 'alive' failed - remove entry
+                logger.add_log_entry(logging.INFO, f'Station {hostname} with IP: {ip} keep alive fail - remove entry')
                 # remove this row from .csv
                 rows = [r for r in rows if r != row]
 

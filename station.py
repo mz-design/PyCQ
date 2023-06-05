@@ -11,7 +11,7 @@ import constants
 import threading
 import logging
 from socket import socket, gethostbyname, gethostname
-# from time import sleep
+import time
 
 import csv_ops
 import tcp_client
@@ -34,7 +34,6 @@ if not os.path.exists(directory):
 if not os.path.exists(constants.HISTORY):
     csv_ops.open_csv_file(constants.HISTORY)
 
-
 # perform cleanups on startup
 cleanup.clean_log(constants.LOG_FILE, constants.LOG_MAX_LINES)
 cleanup.clean_history(constants.HISTORY, constants.HISTORY_MAX_ENTRIES)
@@ -42,7 +41,7 @@ cleanup.clean_AudioFiles(f'{constants.MESSAGE_STORE}/', constants.MESSAGE_STORE_
 
 # get configuration from constants
 udp_port = constants.UDP_PORT
-magic = constants.MAGIC                                     # UDP 'magic word'
+magic = constants.MAGIC  # UDP 'magic word'
 tcp_port = constants.TCP_PORT
 http_port = constants.HTTP_PORT
 
@@ -51,32 +50,36 @@ my_ip = gethostbyname(gethostname())
 
 # Initially set station_status to OFFLINE
 station_online = False
-logger.add_log_entry(logging.WARNING,f"Station {my_hostname} {my_ip} is OFFLINE")
+logger.add_log_entry(logging.WARNING, f"Station {my_hostname} {my_ip} is OFFLINE")
 
-# Create thread objects for 'announce' and periodic keep alive
+
+def register_to_service():
+    if not station_online:
+        # Wait for 'Caller announcement' and get 'Caller IP' and 'Caller HOSTNAME'
+        caller_ip, caller_hostname = listener.listen_for_service(udp_port, magic)
+        # encode 'REGISTER' message
+        data = TcpMessage.create(TcpMessage(my_ip, my_hostname, 'REGISTER', ''))
+        # send to 'Caller'
+        tcp_client.start_client(caller_ip, constants.TCP_PORT, data)
+
+
+def run_periodically(interval):
+    while True:
+        print("periodic station register\n")
+        register_to_service()
+        time.sleep(interval)
+
+
+# Create thread objects for TCP server, HTTP server and periodic register
 thread_http_srv = threading.Thread(target=http_srv.start_http_server, args=(http_port,))
 thread_tcp_server = threading.Thread(target=tcp_server.start_server, args=(my_hostname, tcp_port))
+thread_periodic_register = threading.Thread(target=run_periodically, args=(constants.STATION_REGISTER_INTERVAL,))
 # thread_announcer = threading.Thread(target=announcer.announce_service, args=(udp_port, magic, announce_interval))
 # thread_periodic_keep_alive = threading.Thread(target=keep_alive.run_periodically, args=(keep_alive_interval, ))
 
 # Start threads
 thread_http_srv.start()
 thread_tcp_server.start()
-# thread_announcer.start()
-# time.sleep(0.1)
-# thread_periodic_keep_alive.start()
-
-def register_to_service():
-    # Wait for 'Caller announcement' and get 'Caller IP' and 'Caller HOSTNAME'
-    caller_ip, caller_hostname = listener.listen_for_service(udp_port, magic)
-
-    # encode 'REGISTER' message
-    data = TcpMessage.create(TcpMessage(my_ip, my_hostname, 'REGISTER', ''))
-    # send to 'Caller'
-    tcp_client.start_client(caller_ip, constants.TCP_PORT, data)
-
-# def check_online
-
-register_to_service()
-
+time.sleep(0.01)
+thread_periodic_register.start()
 

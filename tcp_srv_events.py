@@ -1,6 +1,6 @@
 # ------------------------------------------------------------------------------------------------------
-# tcp_srv_events.py -  server events logic - process incoming TCP message
-#
+# tcp_srv_events.py -  TCP server events logic - process incoming TCP message and generates actions
+#                       and responses
 # Prerequisites: None
 #
 # initial release: 31.05.2023 - MichaelZ
@@ -9,6 +9,7 @@
 import constants
 import csv
 import csv_ops
+# import station
 import tcp_client
 from tcp_message import TcpMessage
 from announcer import gethostname, gethostbyname
@@ -25,7 +26,7 @@ my_ip = gethostbyname(gethostname())
 
 
 def process_message(data):
-
+    import station
     # Parse received message
     ip = TcpMessage.parse(data).ip
     hostname = TcpMessage.parse(data).hostname
@@ -54,14 +55,14 @@ def process_message(data):
         new_line = StationData(ip, hostname)
         csv_ops.append_to_csv(constants.STATIONS, StationData.get_data(new_line))
         # encode 'REGISTER_ACK' message
-        data = TcpMessage.create(TcpMessage(my_ip, my_hostname, 'REGISTER_ACK', 'register_ack'))
+        data = TcpMessage.create(TcpMessage(my_ip, my_hostname, 'REGISTER_ACK', asset))
         # send to remote station
         tcp_client.start_client(ip, constants.TCP_PORT, data)
         logger.add_log_entry(logging.INFO, f"'REGISTER_ACK' sent to station {hostname}")
 
     elif message == 'REGISTER_ACK':
         # station_update_status(status='online')
-        # station.station_online = True
+        station.station_online = True
         logger.add_log_entry(logging.INFO, f"'REGISTER_ACK' received from 'Caller'")
         logger.add_log_entry(logging.INFO, "Station status set ONLINE")
 
@@ -79,7 +80,7 @@ def process_message(data):
 
     elif message == 'KEEP_ALIVE_REQ':
         # Encode 'KEEP_ALIVE_ACK'
-        data = TcpMessage.create(TcpMessage(my_ip, my_hostname, 'KEEP_ALIVE_ACK', 'keep_alive_ack'))
+        data = TcpMessage.create(TcpMessage(my_ip, my_hostname, 'KEEP_ALIVE_ACK', asset))
         # send to remote station
         tcp_client.start_client(ip, constants.TCP_PORT, data)
 
