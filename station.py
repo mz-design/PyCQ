@@ -52,9 +52,10 @@ my_ip = gethostbyname(gethostname())
 station = StationStatus()
 station.set_status('offline')
 logger.add_log_entry(logging.WARNING, f"Station {my_hostname} {my_ip} is OFFLINE")
-
+print(f"initially set station status to {station.get_status()}")
 
 def register_to_service():
+    print(f"station status {station.get_status()} 'register_to_service'")
     if station.get_status() != 'online':
         # Wait for 'Caller announcement' and get 'Caller IP' and 'Caller HOSTNAME'
         caller_ip, caller_hostname = listener.listen_for_service(udp_port, magic)

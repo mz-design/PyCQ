@@ -63,6 +63,7 @@ def process_message(data):
         # update station status to 'online'
         station = StationStatus()
         station.set_status('online')
+        print(f"Station status is set to {station.get_status()} after receiving REGISTER_ACK")
         logger.add_log_entry(logging.INFO, f"'REGISTER_ACK' received from 'Caller'")
         logger.add_log_entry(logging.INFO, "Station status set ONLINE")
 
