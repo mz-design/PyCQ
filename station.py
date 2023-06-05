@@ -12,7 +12,7 @@ import threading
 import logging
 from socket import socket, gethostbyname, gethostname
 import time
-from station_status import StationStatus
+import station_status
 import csv_ops
 import tcp_client
 from tcp_message import TcpMessage
@@ -49,14 +49,14 @@ my_hostname = gethostname()
 my_ip = gethostbyname(gethostname())
 
 # Initially set station_status to OFFLINE
-station = StationStatus()
-station.set_status('offline')
+# station = StationStatus()
+station_status.StationStatus = 'offline'
 logger.add_log_entry(logging.WARNING, f"Station {my_hostname} {my_ip} is OFFLINE")
-print(f"initially set station status to {station.get_status()}")
+print(f"initially set station status to {station_status.StationStatus}")
 
 def register_to_service():
-    print(f"station status {station.get_status()} 'register_to_service'")
-    if station.get_status() != 'online':
+    print(f"station status {station_status.StationStatus} 'register_to_service'")
+    if station_status.StationStatus != 'online':
         # Wait for 'Caller announcement' and get 'Caller IP' and 'Caller HOSTNAME'
         caller_ip, caller_hostname = listener.listen_for_service(udp_port, magic)
         # encode 'REGISTER' message

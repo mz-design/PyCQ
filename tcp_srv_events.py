@@ -9,7 +9,7 @@
 import constants
 import csv
 import csv_ops
-from station_status import StationStatus
+import station_status
 import tcp_client
 from tcp_message import TcpMessage
 from announcer import gethostname, gethostbyname
@@ -61,9 +61,8 @@ def process_message(data):
 
     elif message == 'REGISTER_ACK':
         # update station status to 'online'
-        station = StationStatus()
-        station.set_status('online')
-        print(f"Station status is set to {station.get_status()} after receiving REGISTER_ACK")
+        station_status.StationStatus = 'online'
+        print(f"Station status is set to {station_status.StationStatus} after receiving REGISTER_ACK")
         logger.add_log_entry(logging.INFO, f"'REGISTER_ACK' received from 'Caller'")
         logger.add_log_entry(logging.INFO, "Station status set ONLINE")
 
