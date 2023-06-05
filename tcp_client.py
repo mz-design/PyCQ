@@ -15,15 +15,15 @@ from logger import Logger
 logger = Logger(constants.LOG_FILE, level=constants.LOGGING_LEVEL)
 
 
-def start_client(host, port, data):
+def start_client(tcp_host, tcp_port, data):
     # Create a TCP socket
     client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
     try:
         # Connect to the server
-        client_socket.connect((host, port))
-        print(f"Connected to server at {host}:{port}")
-        logger.add_log_entry(logging.INFO, f"Connected to server at {host}:{port}")
+        client_socket.connect((tcp_host, tcp_port))
+        print(f"Connected to server at {tcp_host}:{tcp_port}")
+        logger.add_log_entry(logging.INFO, f"Connected to server at {tcp_host}:{tcp_port}")
 
         # Send data to the server
         message = data
@@ -50,7 +50,8 @@ def start_client(host, port, data):
         print("Client socket closed")
         logger.add_log_entry(logging.INFO, "Client socket closed")
 
+
 # TODO: remove this Example usage after debug:
-# host = "localhost"
-# port = 1234
-# start_client(host, port, "Hello!")
+tcp_host = '10.100.102.63'
+tcp_port = 1234
+start_client(tcp_host, tcp_port, "Hello!")
