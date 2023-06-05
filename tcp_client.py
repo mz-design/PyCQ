@@ -52,6 +52,6 @@ def start_client(tcp_host, tcp_port, data):
 
 
 # TODO: remove this Example usage after debug:
-tcp_host = '10.100.102.63'
-tcp_port = 1234
-start_client(tcp_host, tcp_port, "Hello!")
+# tcp_host = '10.100.102.63'
+# tcp_port = 1234
+# start_client(tcp_host, tcp_port, "Hello!")

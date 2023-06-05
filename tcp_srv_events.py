@@ -20,10 +20,8 @@ from logger import Logger
 # Initialize log
 logger = Logger(constants.LOG_FILE, level=constants.LOGGING_LEVEL)
 
-
 my_hostname = gethostname()
 my_ip = gethostbyname(gethostname())
-
 
 
 def process_message(data):

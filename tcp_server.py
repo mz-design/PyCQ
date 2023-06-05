@@ -76,6 +76,6 @@ def start_server(tcp_host, tcp_port):
 
 
 # TODO: remove this Example usage after debug
-host = "10.100.102.63"
-port = 1234
-start_server(host, port)
+# host = "10.100.102.63"
+# port = 1234
+# start_server(host, port)
