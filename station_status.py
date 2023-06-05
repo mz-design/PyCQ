@@ -16,14 +16,16 @@ logger = Logger(constants.LOG_FILE, level=constants.LOGGING_LEVEL)
 
 class StationStatus:
 
-    def __init__(self, status):
-        self.status = status
+    def __init__(self):
+        self.status = None
 
     def get_status(self):
         return self.status
 
-    def set_status(self, status):
-        self.status = status
-        if status is not ('online' or 'offline'):
+    def set_status(self, new_status):
+        if new_status not in ('online', 'offline'):
             logger.add_log_entry(logging.ERROR, f"Invalid station status {self.status} (valid are 'online'/'offline')")
+            return
+        self.status = new_status
         return self.status
+

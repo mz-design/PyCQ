@@ -49,12 +49,13 @@ my_hostname = gethostname()
 my_ip = gethostbyname(gethostname())
 
 # Initially set station_status to OFFLINE
-StationStatus.set_status('offline')
+station = StationStatus()
+station.set_status('offline')
 logger.add_log_entry(logging.WARNING, f"Station {my_hostname} {my_ip} is OFFLINE")
 
 
 def register_to_service():
-    if not station_online:
+    if station.get_status() != 'online':
         # Wait for 'Caller announcement' and get 'Caller IP' and 'Caller HOSTNAME'
         caller_ip, caller_hostname = listener.listen_for_service(udp_port, magic)
         # encode 'REGISTER' message
