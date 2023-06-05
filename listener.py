@@ -15,11 +15,11 @@ from logger import Logger
 logger = Logger(constants.LOG_FILE, level=constants.LOGGING_LEVEL)
 
 
-def listen_for_service(port, magic):
+def listen_for_service(udp_port, udp_magic):
     s = socket(AF_INET, SOCK_DGRAM)  # create UDP socket
-    s.bind(('', port))
-    global caller_ip
-    global caller_hostname
+    s.bind(('', udp_port))
+    caller_ip = None
+    caller_hostname = None
 
     while True:
         try:
@@ -29,11 +29,11 @@ def listen_for_service(port, magic):
             logger.add_log_entry(logging.ERROR, f"Error receiving announcement packet: {e}")
             continue
 
-        if data.startswith(magic):
+        if data.decode('utf-8').startswith(udp_magic):
             caller_ip = addr[0]
-            caller_hostname = data[len(magic)+len(ip):].decode('utf-8')
-            print(f"Got service announcement from {ip} {hostname}")
-            logger.add_log_entry(logging.INFO, f"Got service announcement from {ip} {hostname}")
+            caller_hostname = data[len(magic)+len(caller_ip):].decode('utf-8')
+            print(f"Got service announcement from {caller_ip} {caller_hostname}")
+            logger.add_log_entry(logging.INFO, f"Got service announcement from {caller_ip} {caller_hostname}")
             break
 
     # close the listening UDP socket
