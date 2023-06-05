@@ -18,11 +18,11 @@ logger = Logger(constants.LOG_FILE, level=constants.LOGGING_LEVEL)
 class StationData:
     def __init__(self, ip, hostname):
         if not isinstance(ip, str):
-            logger.add_log_entry(logging.ERROR, "class:HistoryData - 'ip' must be a string")
-            raise TypeError("ip must be a string")
+            logger.add_log_entry(logging.ERROR, "class:StationData - 'ip' must be a string")
+            raise TypeError("'ip' must be a string")
         if not isinstance(hostname, str):
-            logger.add_log_entry(logging.ERROR, "class:HistoryData - 'ip' must be a string")
-            raise TypeError("ip must be a string")
+            logger.add_log_entry(logging.ERROR, "class:StationData - 'hostname' must be a string")
+            raise TypeError("'hostname' must be a string")
         self.ip = ip
         self.hostname = hostname
 

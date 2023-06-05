@@ -38,11 +38,11 @@ def start_client(tcp_host, tcp_port, data):
     except socket.gaierror as e:
         print(f"Address-related error occurred: {str(e)}")
         logger.add_log_entry(logging.ERROR, f"Address-related error occurred: {str(e)}")
-    except socket.error as e:
-        print(f"Socket error occurred: {str(e)}")
-        logger.add_log_entry(logging.ERROR, f"Socket error occurred: {str(e)}")
     except socket.timeout as e:
         print(f"Timeout error occurred: {str(e)}")
+        logger.add_log_entry(logging.ERROR, f"Socket error occurred: {str(e)}")
+    except socket.error as e:
+        print(f"Socket error occurred: {str(e)}")
         logger.add_log_entry(logging.ERROR, f"Socket error occurred: {str(e)}")
     finally:
         # Close the client socket

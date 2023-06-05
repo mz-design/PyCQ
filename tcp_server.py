@@ -28,7 +28,7 @@ def handle_client(client_socket, client_address):
         # Receive data from the client
         data = client_socket.recv(1024)
         received_message = data.decode("utf-8")
-        print(f"Received message: {received_message}")
+        print(f"Received message:\n{received_message}")
         logger.add_log_entry(logging.INFO, f"Received message: {received_message}")
 
         # Process received message

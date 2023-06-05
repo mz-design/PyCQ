@@ -7,7 +7,7 @@
 # ---------------------------------------------------------------------------------------------------
 import csv
 import constants
-import threading
+# import threading
 import logging
 import time
 from ping3 import ping, verbose_ping
@@ -63,7 +63,7 @@ def check_alive():
                 # remove this row from .csv
                 rows = [r for r in rows if r != row]
 
-    # Write changes to .csv file
+    # Write changes to stations.csv file
     fieldnames = ['IP', 'HOSTNAME']
     with open(constants.STATIONS, 'w', newline='') as csv_file:
         writer = csv.DictWriter(csv_file, fieldnames=fieldnames)

@@ -5,11 +5,12 @@
 #
 # initial release: 30.05.2023 - MichaelZ
 # ---------------------------------------------------------------------------------------------------
+import socket
 
 import constants
 import threading
-import logging
-import socket
+# import logging
+# import socket
 import time
 import os
 import csv_ops
@@ -50,8 +51,8 @@ http_port = constants.HTTP_PORT
 # http_srv = http_srv.start_http_server(http_port)
 
 # Create thread objects for 'announce' and periodic keep alive
-thread_http_srv = threading.Thread(target=http_srv.start_http_server, args=(http_port, ))
-thread_tcp_server = threading.Thread(target=tcp_server.start_server, args=("localhost", tcp_port))
+thread_http_srv = threading.Thread(target=http_srv.start_http_server, args=(http_port,))
+thread_tcp_server = threading.Thread(target=tcp_server.start_server, args=(socket.gethostname(), tcp_port))
 thread_announcer = threading.Thread(target=announcer.announce_service, args=(udp_port, magic, announce_interval))
 thread_periodic_keep_alive = threading.Thread(target=keep_alive.run_periodically, args=(keep_alive_interval, ))
 

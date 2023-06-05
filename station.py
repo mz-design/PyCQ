@@ -11,14 +11,14 @@ import constants
 import threading
 import logging
 from socket import socket, gethostbyname, gethostname
-from time import sleep
+# from time import sleep
 
 import csv_ops
 import tcp_client
 from tcp_message import TcpMessage
 import http_srv
-import keep_alive
-import announcer
+# import keep_alive
+# import announcer
 import cleanup
 import listener
 import tcp_server
@@ -53,6 +53,18 @@ my_ip = gethostbyname(gethostname())
 station_online = False
 logger.add_log_entry(logging.WARNING,f"Station {my_hostname} {my_ip} is OFFLINE")
 
+# Create thread objects for 'announce' and periodic keep alive
+thread_http_srv = threading.Thread(target=http_srv.start_http_server, args=(http_port,))
+thread_tcp_server = threading.Thread(target=tcp_server.start_server, args=(my_hostname, tcp_port))
+# thread_announcer = threading.Thread(target=announcer.announce_service, args=(udp_port, magic, announce_interval))
+# thread_periodic_keep_alive = threading.Thread(target=keep_alive.run_periodically, args=(keep_alive_interval, ))
+
+# Start threads
+thread_http_srv.start()
+thread_tcp_server.start()
+# thread_announcer.start()
+# time.sleep(0.1)
+# thread_periodic_keep_alive.start()
 
 def register_to_service():
     # Wait for 'Caller announcement' and get 'Caller IP' and 'Caller HOSTNAME'
@@ -65,6 +77,6 @@ def register_to_service():
 
 # def check_online
 
-
+register_to_service()
 
 
