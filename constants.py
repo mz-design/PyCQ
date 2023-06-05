@@ -1,5 +1,5 @@
 # ------------------------------------------------------------------------------------------------------
-# constants.py -  Main project constants (like logging level, file names, port numbers etc.)
+# constants.py -  Main project constants (like logging level, file names, tcp_port numbers etc.)
 #
 # Prerequisites: None
 #

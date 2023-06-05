@@ -1,5 +1,5 @@
 # ---------------------------------------------------------------------------------------------
-# listener.py - Station listen for 'Caller' announcement UDP packet on network broadcast (port: 50000)
+# listener.py - Station listen for 'Caller' announcement UDP packet on network broadcast (tcp_port: 50000)
 #
 # Prerequisites: none
 #
@@ -44,7 +44,7 @@ def listen_for_service(udp_port, udp_magic):
 # def register_to_service(caller_ip, tcp_port)
 
 
-# port = constants.UDP_PORT
+# tcp_port = constants.UDP_PORT
 # magic = constants.MAGIC
-# listen_for_service(port, magic)
+# listen_for_service(tcp_port, magic)
 

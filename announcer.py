@@ -1,5 +1,5 @@
 # ---------------------------------------------------------------------------------------------
-# announcer.py - 'Caller' send announcement UDP packet on network broadcast (port: 50000)
+# announcer.py - 'Caller' send announcement UDP packet on network broadcast (tcp_port: 50000)
 #
 # Prerequisites: none
 #
@@ -36,7 +36,7 @@ def announce_service(port, magic, interval):
         s.close()
 
 # TODO: remove after debug
-# port = 50000
+# tcp_port = 50000
 # magic = constants.MAGIC
 # interval = constants.ANNOUNCE_INTERVAL
-# announce_service(port, magic, interval)
+# announce_service(tcp_port, magic, interval)

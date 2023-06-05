@@ -20,9 +20,9 @@ def start_http_server(port):
     Handler = http.server.SimpleHTTPRequestHandler
     try:
         with socketserver.TCPServer(("", port), Handler) as httpd:
-            print("serving at port", port)
+            print("serving at tcp_port", port)
             httpd.serve_forever()
-            logger.add_log_entry(logging.INFO, f"HTTP server started on port {port}: success")
+            logger.add_log_entry(logging.INFO, f"HTTP server started on tcp_port {port}: success")
     except Exception as e:
         print(f"Error: {e}")
         logger.add_log_entry(logging.ERROR, f"HTTP server error: {e}")

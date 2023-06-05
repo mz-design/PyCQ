@@ -49,17 +49,17 @@ def handle_client(client_socket, client_address):
     # return received_message
 
 
-def start_server(host, port):
+def start_server(tcp_host, tcp_port):
     # Create a TCP socket
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-    # Bind the socket to a specific host and port
-    server_socket.bind((host, port))
+    # Bind the socket to a specific tcp_host and tcp_port
+    server_socket.bind((tcp_host, tcp_port))
 
     # Listen for incoming connections
     server_socket.listen()
-    print(f"Server listening on {host}:{port}")
-    # logger.add_log_entry(logging.INFO, f"Server start listening on {host}:{port}")
+    print(f"Server listening on {tcp_host}:{tcp_port}")
+    logger.add_log_entry(logging.INFO, f"Server start listening on {tcp_host}:{tcp_port}")
 
     while True:
         # Exception handling with try-except block
@@ -76,6 +76,6 @@ def start_server(host, port):
 
 
 # TODO: remove this Example usage after debug
-# host = "localhost"
-# port = 1234
-# start_server(host, port)
+host = "10.100.102.63"
+port = 1234
+start_server(host, port)
