@@ -60,8 +60,9 @@ def process_message(data):
         logger.add_log_entry(logging.INFO, f"'REGISTER_ACK' sent to station {hostname}")
 
     elif message == 'REGISTER_ACK':
-        # station_update_status(status='online')
-        StationStatus.set_status('online')
+        # update station status to 'online'
+        station = StationStatus()
+        station.set_status('online')
         logger.add_log_entry(logging.INFO, f"'REGISTER_ACK' received from 'Caller'")
         logger.add_log_entry(logging.INFO, "Station status set ONLINE")
 
