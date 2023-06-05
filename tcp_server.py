@@ -32,11 +32,10 @@ def handle_client(client_socket, client_address):
         logger.add_log_entry(logging.INFO, f"Received message: {received_message}")
 
         # Process received message
-        # tcp_srv_events.process_message(received_message)
-
         # Send a response back to the client
         response_message = tcp_srv_events.process_message(received_message)
-        client_socket.send(response_message.encode("utf-8"))
+        if response_message is not None:
+            client_socket.send(response_message.encode("utf-8"))
 
     except Exception as e:
         print(f"Error handling connection from {client_address}: {e}")
