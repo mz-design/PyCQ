@@ -52,7 +52,7 @@ def check_alive():
             rows = [r for r in rows if r != row]
         else:
             # Encode 'KEEP_ALIVE'
-            data = TcpMessage.create(TcpMessage(my_ip, my_hostname, 'KEEP_ALIVE_REQ', ''))
+            data = TcpMessage.create(TcpMessage(my_ip, my_hostname, 'KEEP_ALIVE_REQ', asset="keep_alive"))
             # send to remote station
             tcp_client.start_client(ip, constants.TCP_PORT, data)
             # wait a moment...

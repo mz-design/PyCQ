@@ -7,6 +7,7 @@
 # ------------------------------------------------------------------------------------------------------
 
 import constants
+import csv
 import csv_ops
 import tcp_client
 from tcp_message import TcpMessage
@@ -40,12 +41,20 @@ def process_message(data):
                 # found conflict - remove station entry
                 logger.add_log_entry(logging.INFO, f'Found station with IP: {ip} and Hostname: '
                                                    f'{row.get("HOSTNAME")} - remove old entry')
-                csv_ops.remove_csv_row(constants.STATIONS, row)
+                # csv_ops.remove_csv_row(constants.STATIONS, row)
+                rows = [r for r in rows if r != row]
+                # Write changes to stations.csv file
+                fieldnames = ['IP', 'HOSTNAME']
+                with open(constants.STATIONS, 'w', newline='') as csv_file:
+                    writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
+                    writer.writeheader()
+                    for new_row in rows:
+                        writer.writerow(new_row)
         # add new entry
         new_line = StationData(ip, hostname)
         csv_ops.append_to_csv(constants.STATIONS, StationData.get_data(new_line))
         # encode 'REGISTER_ACK' message
-        data = TcpMessage.create(TcpMessage(my_ip, my_hostname, 'REGISTER_ACK', ''))
+        data = TcpMessage.create(TcpMessage(my_ip, my_hostname, 'REGISTER_ACK', 'register_ack'))
         # send to remote station
         tcp_client.start_client(ip, constants.TCP_PORT, data)
         logger.add_log_entry(logging.INFO, f"'REGISTER_ACK' sent to station {hostname}")
@@ -70,7 +79,7 @@ def process_message(data):
 
     elif message == 'KEEP_ALIVE_REQ':
         # Encode 'KEEP_ALIVE_ACK'
-        data = TcpMessage.create(TcpMessage(my_ip, my_hostname, 'KEEP_ALIVE_ACK', asset))
+        data = TcpMessage.create(TcpMessage(my_ip, my_hostname, 'KEEP_ALIVE_ACK', 'keep_alive_ack'))
         # send to remote station
         tcp_client.start_client(ip, constants.TCP_PORT, data)
 
