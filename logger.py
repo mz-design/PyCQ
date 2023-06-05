@@ -23,7 +23,6 @@ class Logger:
             handler.setFormatter(formatter)
             self.logger.addHandler(handler)
 
-
     def add_log_entry(self, level, information):
         self.logger.log(level, information)
 

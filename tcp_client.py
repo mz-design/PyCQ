@@ -28,12 +28,7 @@ def start_client(tcp_host, tcp_port, data):
         # Send data to the server
         message = data
         client_socket.send(message.encode("utf-8"))
-
-        # Receive the response from the server
-        # response = client_socket.recv(1024)
-        # received_message = response.decode("utf-8")
-        # print(f"Received message: {received_message}")
-        # logger.add_log_entry(logging.INFO, f"Received message: {received_message}")
+        logger.add_log_entry(logging.DEBUG, f"sending TCP message: {message}")
 
     except socket.gaierror as e:
         print(f"Address-related error occurred: {str(e)}")

@@ -23,7 +23,7 @@ def handle_client(client_socket, client_address):
     try:
         # Handle the client connection
         print(f"Accepted connection from: {client_address}")
-        # logger.add_log_entry(logging.INFO, f"Accepted connection from: {client_address}")
+        logger.add_log_entry(logging.INFO, f"Accepted connection from: {client_address}")
 
         # Receive data from the client
         data = client_socket.recv(1024)
@@ -32,19 +32,20 @@ def handle_client(client_socket, client_address):
         logger.add_log_entry(logging.INFO, f"Received message: {received_message}")
 
         # Process received message
-        # Send a response back to the client
         response_message = tcp_srv_events.process_message(received_message)
+
+        # Send a response back to the client (when response required)
         if response_message is not None:
             client_socket.send(response_message.encode("utf-8"))
 
     except Exception as e:
         print(f"Error handling connection from {client_address}: {e}")
-        # logger.add_log_entry(logging.ERROR, f"Error handling connection from {client_address}: {e}")
+        logger.add_log_entry(logging.ERROR, f"Error handling connection from {client_address}: {e}")
     finally:
         # Close the client socket
         client_socket.close()
         print(f"Closed connection with: {client_address}")
-        # logger.add_log_entry(logging.INFO, f"Closed connection with: {client_address}")
+        logger.add_log_entry(logging.INFO, f"Closed connection with: {client_address}")
     # return received_message
 
 

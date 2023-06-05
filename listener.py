@@ -32,7 +32,6 @@ def listen_for_service(udp_port, udp_magic):
         if data.decode('utf-8').startswith(udp_magic):
             caller_ip = addr[0]
             caller_hostname = data[len(udp_magic)+len(caller_ip):].decode('utf-8')
-            print(f"Got service announcement from {caller_ip} {caller_hostname}")
             logger.add_log_entry(logging.INFO, f"Got service announcement from {caller_ip} {caller_hostname}")
             break
 

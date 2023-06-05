@@ -38,7 +38,7 @@ def process_message(data):
         for row in rows:
             # find and remove duplicates
             if row.get('IP') == ip or row.get('HOSTNAME') == hostname:
-                # found conflict - remove station entry
+                # we found conflict - remove station entry
                 logger.add_log_entry(logging.INFO, f'Found station with IP: {ip} and Hostname: '
                                                    f'{row.get("HOSTNAME")} - remove old entry')
                 # csv_ops.remove_csv_row(constants.STATIONS, row)
@@ -50,11 +50,14 @@ def process_message(data):
                     writer.writeheader()
                     for new_row in rows:
                         writer.writerow(new_row)
-        # add new entry
+
+        # add new line entry to the file
         new_line = StationData(ip, hostname)
         csv_ops.append_to_csv(constants.STATIONS, StationData.get_data(new_line))
+
         # encode 'REGISTER_ACK' message
         data = TcpMessage.create(TcpMessage(my_ip, my_hostname, 'REGISTER_ACK', asset))
+
         # send to remote station
         tcp_client.start_client(ip, constants.TCP_PORT, data)
         logger.add_log_entry(logging.INFO, f"'REGISTER_ACK' sent to station {hostname}")
@@ -62,9 +65,7 @@ def process_message(data):
     elif message == 'REGISTER_ACK':
         # update station status to 'online'
         station_status.StationStatus = 'online'
-        print(f"Station status is set to {station_status.StationStatus} after receiving REGISTER_ACK")
-        logger.add_log_entry(logging.INFO, f"'REGISTER_ACK' received from 'Caller'")
-        logger.add_log_entry(logging.INFO, "Station status set ONLINE")
+        logger.add_log_entry(logging.INFO, f"'REGISTER_ACK' received from 'Caller' - set station status ONLINE")
 
     elif message == 'NEW_MESSAGE_IND':
         # station_retrieve_message(asset)
@@ -90,4 +91,4 @@ def process_message(data):
     else:
         # Unexpected message - process as "msg_not_recognized" ERROR
         print(f"ERROR - unexpected message type: {TcpMessage.parse(data).message}")
-
+        logger.add_log_entry(logging.ERROR, f"ERROR - unexpected message type: {TcpMessage.parse(data).message}")

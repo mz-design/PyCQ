@@ -26,6 +26,7 @@ class TcpMessage:
         data += f"Hostname: {self.hostname}\n"
         data += f"Message: {self.message}\n"
         data += f"Asset: {self.asset}"
+        logger.add_log_entry(logging.DEBUG, f"TCP message {self.message} with {self.ip} and {self.hostname} successfully created")
         return data
 
     def __str__(self):
@@ -41,7 +42,6 @@ class TcpMessage:
             asset = lines[3].split(": ")[1]
             return cls(ip, hostname, message, asset)
         except (IndexError, ValueError) as e:
-            print(f"Error parsing data string: {e}")
             logger.add_log_entry(logging.ERROR, f"TcpMessage - Error parsing data string: {e}")
 
 

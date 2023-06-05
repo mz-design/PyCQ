@@ -35,7 +35,6 @@ def clean_AudioFiles(folder_path, num_to_keep):
         logger.add_log_entry(logging.INFO, f'MsgStore cleanup: Keep {num_to_keep} latest messages')
 
     except Exception as e:
-        print(f"An error occurred: {e}")
         logger.add_log_entry(logging.ERROR, e)
 
 
@@ -53,7 +52,6 @@ def clean_history(csv_file, num_to_keep):
         logger.add_log_entry(logging.INFO, f'History cleanup: Keep {num_to_keep} latest CSV entries')
 
     except (FileNotFoundError, pd.errors.EmptyDataError) as e:
-        print(f"Error: {e}")
         logger.add_log_entry(logging.ERROR, e)
 
 
@@ -72,7 +70,6 @@ def clean_log(log_file, num_to_keep):
         logger.add_log_entry(logging.INFO, f'Logfile cleanup: Keep {num_to_keep} latest log entries')
 
     except Exception as e:
-        print(f"An error occurred: {e}")
         logger.add_log_entry(logging.ERROR, e)
 
 
