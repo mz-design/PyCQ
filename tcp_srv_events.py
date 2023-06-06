@@ -9,6 +9,7 @@
 import constants
 import csv
 import csv_ops
+import new_msg_rcv
 import station_status
 import tcp_client
 from tcp_message import TcpMessage
@@ -69,8 +70,7 @@ def process_message(data):
 
     elif message == 'NEW_MESSAGE_IND':
         # station_retrieve_message(asset)
-
-        # Process message retrieval (Station)
+        new_msg_rcv.receive_and_play_new_message(ip, asset)
         # Encode 'NEW_MESSAGE_ACK'
         data = TcpMessage.create(TcpMessage(my_ip, my_hostname, 'NEW_MESSAGE_ACK', asset))
         # send to remote station
