@@ -50,7 +50,7 @@ def receive_and_play_new_message(caller_ip, asset):
 # def send_new_message_ack(asset):
     # here comes code
 
-receive_and_play_new_message('10.100.102.63', '2023-06-06_18-44-21.ogg')
+# receive_and_play_new_message('10.100.102.63', '2023-06-06_18-44-21.ogg')
 
 
 
