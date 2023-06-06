@@ -11,7 +11,7 @@
 import constants
 import sounddevice as sd
 import soundfile as sf
-from tkinter import *
+# from tkinter import *
 import datetime
 import os
 import logging
