@@ -69,6 +69,7 @@ def process_message(data):
 
     elif message == 'NEW_MESSAGE_IND':
         # station_retrieve_message(asset)
+
         # Process message retrieval (Station)
         # Encode 'NEW_MESSAGE_ACK'
         data = TcpMessage.create(TcpMessage(my_ip, my_hostname, 'NEW_MESSAGE_ACK', asset))

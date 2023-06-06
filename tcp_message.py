@@ -26,7 +26,7 @@ class TcpMessage:
         data += f"Hostname: {self.hostname}\n"
         data += f"Message: {self.message}\n"
         data += f"Asset: {self.asset}"
-        logger.add_log_entry(logging.DEBUG, f"TCP message {self.message} with {self.ip} and {self.hostname} successfully created")
+        logger.add_log_entry(logging.DEBUG, f"TCP message {self.message} with {self.ip} {self.hostname} and {self.asset} successfully created")
         return data
 
     def __str__(self):

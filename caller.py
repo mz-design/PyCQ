@@ -5,6 +5,8 @@
 #
 # initial release: 30.05.2023 - MichaelZ
 # ---------------------------------------------------------------------------------------------------
+import runpy
+
 import socket
 
 import constants
@@ -20,7 +22,6 @@ import announcer
 import cleanup
 import tcp_server
 from logger import Logger
-
 
 # Initialize logger
 logger = Logger(constants.LOG_FILE, level=constants.LOGGING_LEVEL)
@@ -63,6 +64,8 @@ thread_announcer.start()
 time.sleep(0.1)
 thread_periodic_keep_alive.start()
 
+
+runpy.run_module('new_msg_send.py')
 
 
 

@@ -16,7 +16,7 @@ logger = Logger(constants.LOG_FILE, level=constants.LOGGING_LEVEL)
 
 
 class HistoryData:
-    def __init__(self, time, action, hostname, ip, item):
+    def __init__(self, time, action, hostname, ip, asset):
         if not isinstance(time, str):
             logger.add_log_entry(logging.ERROR, "class:HistoryData - 'time' must be a string")
             raise TypeError("time must be a string")
@@ -29,14 +29,14 @@ class HistoryData:
         if not isinstance(ip, str):
             logger.add_log_entry(logging.ERROR, "class:HistoryData - 'ip' must be a string")
             raise TypeError("ip must be a string")
-        if not isinstance(item, str):
+        if not isinstance(asset, str):
             logger.add_log_entry(logging.ERROR, "class:HistoryData - 'item' must be a string")
             raise TypeError("item must be a string")
         self.time = time
         self.action = action
         self.hostname = hostname
         self.ip = ip
-        self.item = item
+        self.asset = asset
 
     def check_action(self):
         possible_actions = ('Text', 'Voice', 'Alert')
@@ -83,5 +83,5 @@ class HistoryData:
     def get_ip(self):
         return self.ip
 
-    def get_item(self):
-        return self.item
+    def get_asset(self):
+        return self.asset

@@ -43,7 +43,7 @@ def voice_rec():
         if not os.path.exists(directory):
             os.makedirs(directory)
 
-        # Generate unique file name
+        # Generate unique file name with date and time of recording
         filename = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S") + constants.AUDIO_TYPE
 
         # Save as WAV file at correct sampling rate with selected filename
@@ -56,9 +56,8 @@ def voice_rec():
     return filename
 
 
-def voice_play():
+def voice_play(filename):
     try:
-        filename = 'my_Audio_file.ogg'
         sd.default.device = audio_dev.find_output_device()
         data, fs = sf.read(filename, dtype='float32')
         sd.play(data, samplerate=constants.SAMPLERATE)
@@ -71,16 +70,16 @@ def voice_play():
 
 
 # TODO: Remove Tk() form after final debug - not required here
-master = Tk()
-
-Label(master, text="Voice REC/PLAY debug").grid(row=0, sticky=W, rowspan=5)
-
-rec_button = Button(master, text="Record", command=voice_rec)
-rec_button.grid(row=0, column=2, columnspan=2, rowspan=2, padx=5, pady=5)
-
-play_button = Button(master, text="Play", command=voice_play)
-play_button.grid(row=2, column=2, columnspan=2, rowspan=2, padx=5, pady=5)
-
-mainloop()
+# master = Tk()
+#
+# Label(master, text="Voice REC/PLAY debug").grid(row=0, sticky=W, rowspan=5)
+#
+# rec_button = Button(master, text="Record", command=voice_rec)
+# rec_button.grid(row=0, column=2, columnspan=2, rowspan=2, padx=5, pady=5)
+#
+# play_button = Button(master, text="Play", command=voice_play)
+# play_button.grid(row=2, column=2, columnspan=2, rowspan=2, padx=5, pady=5)
+#
+# mainloop()
 
 # TODO: Any more functionalities here? - TBD
