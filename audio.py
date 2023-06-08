@@ -32,11 +32,12 @@ def voice_rec():
         fs = constants.SAMPLERATE
         duration = constants.REC_TIME
         # find available input device (microphone)
-        sd.default.device = audio_dev.find_input_device()
+        device = audio_dev.find_input_device()
+        sd.default.device = device
         # get current volume settings
-        current_volume = audio_dev.get_volume(sd.default.device)
+        current_volume = audio_dev.get_volume(device)
         # set desired volume for recording
-        audio_dev.set_volume(sd.default.device, constants.INPUT_VOLUME)
+        audio_dev.set_volume(device, constants.INPUT_VOLUME)
         # record audio
         sd.default.samplerate = fs
         sd.default.channels = constants.CHANNELS
@@ -44,7 +45,7 @@ def voice_rec():
         sd.wait()
         logger.add_log_entry(logging.DEBUG, f"Capturing {duration}s of {fs}Hz audio on {sd.default.device} - success ")
         # restore current volume settings
-        audio_dev.set_volume(sd.default.device, current_volume)
+        audio_dev.set_volume(device, current_volume)
 
         # Check for valid file storage - create new if not found
         directory = constants.MESSAGE_STORE
@@ -67,17 +68,18 @@ def voice_rec():
 def voice_play(filename):
     try:
         # find available output device (speakers, headphones etc.)
-        sd.default.device = audio_dev.find_output_device()
+        device = audio_dev.find_output_device()
+        sd.default.device = device
         # get current volume settings
-        current_volume = audio_dev.get_volume(sd.default.device)
+        current_volume = audio_dev.get_volume(device)
         # set desired volume for recording
-        audio_dev.set_volume(sd.default.device, constants.OUTPUT_VOLUME)
+        audio_dev.set_volume(device, constants.OUTPUT_VOLUME)
         # play audio
         data, fs = sf.read(filename, dtype='float32')
         sd.play(data, samplerate=constants.SAMPLERATE)
         sd.wait()
         # restore current volume settings
-        audio_dev.set_volume(sd.default.device, current_volume)
+        audio_dev.set_volume(device, current_volume)
 
     except Exception as e:
         print('An error occurred:', e)
