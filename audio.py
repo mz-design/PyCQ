@@ -34,19 +34,12 @@ def voice_rec():
         # find available input device (microphone)
         device = audio_dev.find_input_device()
         sd.default.device = device
-        # get current volume settings
-        current_volume = audio_dev.get_volume(device)
-        # set desired volume for recording
-        audio_dev.set_volume(device, constants.INPUT_VOLUME)
         # record audio
         sd.default.samplerate = fs
         sd.default.channels = constants.CHANNELS
         recording = sd.rec(int(duration * fs))
         sd.wait()
         logger.add_log_entry(logging.DEBUG, f"Capturing {duration}s of {fs}Hz audio on {sd.default.device} - success ")
-        # restore current volume settings
-        audio_dev.set_volume(device, current_volume)
-
         # Check for valid file storage - create new if not found
         directory = constants.MESSAGE_STORE
         if not os.path.exists(directory):
@@ -71,15 +64,15 @@ def voice_play(filename):
         device = audio_dev.find_output_device()
         sd.default.device = device
         # get current volume settings
-        current_volume = audio_dev.get_volume(device)
+        current_volume = audio_dev.spk_volume()
         # set desired volume for recording
-        audio_dev.set_volume(device, constants.OUTPUT_VOLUME)
+        audio_dev.spk_volume().SetMasterVolumeLevel(constants.OUTPUT_VOLUME, None)
         # play audio
         data, fs = sf.read(filename, dtype='float32')
         sd.play(data, samplerate=constants.SAMPLERATE)
         sd.wait()
         # restore current volume settings
-        audio_dev.set_volume(device, current_volume)
+        audio_dev.spk_volume().SetMasterVolumeLevel(current_volume, None)
 
     except Exception as e:
         print('An error occurred:', e)

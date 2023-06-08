@@ -31,8 +31,7 @@ SAMPLERATE = 44100
 CHANNELS = 2
 REC_TIME = 5
 AUDIO_TYPE = '.ogg'              # Supported file types are: '.wav', '.flac' and '.ogg' [default = '.ogg']
-INPUT_VOLUME = 0.8               # Desired input audio device volume setting (valid range 0.0 - 1.0)
-OUTPUT_VOLUME = 0.8              # Desired output audio device volume setting (valid range 0.0 - 1.0)
+OUTPUT_VOLUME = -3.3              # Desired output audio device volume setting in dB (valid range -20.0 -0.0) default -3.3 (~80% of maximum)
 
 # Files and folders
 

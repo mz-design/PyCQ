@@ -2,13 +2,15 @@
 # audio_dev.py - Search for available Windows Audio devices and set default input_device
 #                 for audio recording and default output_device for audio playback
 #
-# Prerequisites: pyaudio
+# Prerequisites: pyaudio, pycaw (for volume control)
 #
 # initial release: 28.05.2023 - MichaelZ
 # -------------------------------------------------------------------------------------
 
 import constants
 import pyaudio
+from pycaw.pycaw import AudioUtilities, IAudioEndpointVolume
+from comtypes import CLSCTX_ALL
 import logging
 from logger import Logger
 
@@ -101,21 +103,23 @@ def find_output_device():
     return output_device
 
 
-def get_volume(device_index):   # Valid volume range is (0.0 - 1.0)
-    # audio = pyaudio.PyAudio()
-    device_info = audio.get_device_info_by_index(device_index)
-    volume = device_info['volume']
-    logger.add_log_entry(logging.DEBUG, f"Current audio device {device_index} volume is: {volume * 100}%")
-    audio.terminate()
+def spk_volume():
+    devices = AudioUtilities.GetSpeakers()
+    print(devices)
+    interface = devices.Activate(IAudioEndpointVolume._iid_, CLSCTX_ALL, None)
+    volume = interface.QueryInterface(IAudioEndpointVolume)
     return volume
 
 
-def set_volume(device_index, volume):   # Valid volume range is (0.0 - 1.0)
-    # audio = pyaudio.PyAudio()
-    device_info = audio.get_device_info_by_index(device_index)
-    device_info['volume'] = volume
-    logger.add_log_entry(logging.DEBUG, f"Setting audio device {device_index} volume to: {volume * 100}%")
-    audio.terminate()
+# def set_volume(device_name, volume):
+#     devices = AudioUtilities.GetSpeakers()
+#     interface = devices.Activate(
+#         ISimpleAudioVolume._iid_,  # Use ISimpleAudioVolume interface
+#         None,
+#         None
+#     )
+#     interface.SetMasterVolume(volume, None)
+
 
 # TODO: remove these debug lines
 # find_input_device()
