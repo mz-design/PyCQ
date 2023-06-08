@@ -61,10 +61,12 @@ def register_to_service():
         data = TcpMessage.create(TcpMessage(my_ip, my_hostname, 'REGISTER', ''))
         # send to 'Caller'
         tcp_client.start_client(caller_ip, constants.TCP_PORT, data)
+        logger.add_log_entry(logging.DEBUG, f"Sent 'REGISTER' message to {caller_hostname} with ip {caller_ip}")
 
 
 def run_periodically(interval):
     while True:
+        logger.add_log_entry(logging.DEBUG, "Periodic Register started")
         print("periodic station register\n")
         register_to_service()
         time.sleep(interval)

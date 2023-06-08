@@ -101,6 +101,22 @@ def find_output_device():
     return output_device
 
 
+def get_volume(device_index):   # Valid volume range is (0.0 - 1.0)
+    # audio = pyaudio.PyAudio()
+    device_info = audio.get_device_info_by_index(device_index)
+    volume = device_info['volume']
+    logger.add_log_entry(logging.DEBUG, f"Current audio device {device_index} volume is: {volume * 100}%")
+    audio.terminate()
+    return volume
+
+
+def set_volume(device_index, volume):   # Valid volume range is (0.0 - 1.0)
+    # audio = pyaudio.PyAudio()
+    device_info = audio.get_device_info_by_index(device_index)
+    device_info['volume'] = volume
+    logger.add_log_entry(logging.DEBUG, f"Setting audio device {device_index} volume to: {volume * 100}%")
+    audio.terminate()
+
 # TODO: remove these debug lines
 # find_input_device()
 # find_output_device()
