@@ -144,5 +144,3 @@ def mute_all(flag):
 # find_output_device()
 
 # TODO: Any more functionalities here? - TBD
-
-print(spk_volume().GetMute())
