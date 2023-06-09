@@ -11,11 +11,10 @@
 import constants
 import sounddevice as sd
 import soundfile as sf
-# from tkinter import *
 import datetime
 import os
 import logging
-
+from time import sleep
 import audio_dev
 from logger import Logger
 
@@ -32,8 +31,7 @@ def voice_rec():
         fs = constants.SAMPLERATE
         duration = constants.REC_TIME
         # find available input device (microphone)
-        device = audio_dev.find_input_device()
-        sd.default.device = device
+        sd.default.device = audio_dev.find_input_device()
         # record audio
         sd.default.samplerate = fs
         sd.default.channels = constants.CHANNELS
@@ -61,18 +59,26 @@ def voice_rec():
 def voice_play(filename):
     try:
         # find available output device (speakers, headphones etc.)
-        device = audio_dev.find_output_device()
-        sd.default.device = device
+        sd.default.device = audio_dev.find_output_device()
         # get current volume settings
-        current_volume = audio_dev.spk_volume()
-        # set desired volume for recording
+        audio_dev.spk_volume().SetMute(0, None)
+        current_volume = audio_dev.spk_volume().GetMasterVolumeLevel()
+        logger.add_log_entry(logging.DEBUG, f"Store current master volume level: {current_volume}")
+        # mute all sound streams except the own one
+        audio_dev.mute_all(True)
+        # set desired master volume for playback
         audio_dev.spk_volume().SetMasterVolumeLevel(constants.OUTPUT_VOLUME, None)
+        logger.add_log_entry(logging.DEBUG, f"Set playback volume to {constants.OUTPUT_VOLUME}")
         # play audio
+        logger.add_log_entry(logging.INFO, f"Playing audio file {filename}")
         data, fs = sf.read(filename, dtype='float32')
         sd.play(data, samplerate=constants.SAMPLERATE)
         sd.wait()
-        # restore current volume settings
+        # un-mute back all sound streams
+        audio_dev.mute(False)
+        # restore current master volume settings
         audio_dev.spk_volume().SetMasterVolumeLevel(current_volume, None)
+        logger.add_log_entry(logging.DEBUG, f"Restore master volume to stored value: {current_volume}")
 
     except Exception as e:
         print('An error occurred:', e)
@@ -94,3 +100,5 @@ def voice_play(filename):
 # mainloop()
 
 # TODO: Any more functionalities here? - TBD
+
+# voice_play('MsgStore/2023-06-08_14-02-27.ogg')

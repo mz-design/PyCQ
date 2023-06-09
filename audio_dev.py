@@ -2,10 +2,11 @@
 # audio_dev.py - Search for available Windows Audio devices and set default input_device
 #                 for audio recording and default output_device for audio playback
 #
-# Prerequisites: pyaudio, pycaw (for volume control)
+# Prerequisites: pyaudio, pycaw, (for volume control), pywin32 for pythoncom
 #
 # initial release: 28.05.2023 - MichaelZ
 # -------------------------------------------------------------------------------------
+
 
 import constants
 import pyaudio
@@ -13,7 +14,7 @@ from pycaw.pycaw import AudioUtilities, IAudioEndpointVolume
 from comtypes import CLSCTX_ALL
 import logging
 from logger import Logger
-
+import pythoncom
 # Initialize logger
 logger = Logger(constants.LOG_FILE, level=constants.LOGGING_LEVEL)
 
@@ -104,11 +105,28 @@ def find_output_device():
 
 
 def spk_volume():
+    pythoncom.CoInitialize()
     devices = AudioUtilities.GetSpeakers()
-    print(devices)
+    logger.add_log_entry(logging.DEBUG, f"Speaker is: {devices}")
     interface = devices.Activate(IAudioEndpointVolume._iid_, CLSCTX_ALL, None)
     volume = interface.QueryInterface(IAudioEndpointVolume)
+    pythoncom.CoUninitialize()
     return volume
+
+
+def mute_all(flag):
+    sessions = AudioUtilities.GetAllSessions()
+    if flag:                                    # Mute
+        for session in sessions:
+            volume = session.SimpleAudioVolume
+            if session.Process and session.Process.name() == "python.exe":
+                volume.SetMute(0, None)
+            else:                               # Mute all audio streams except my own
+                volume.SetMute(1, None)
+    else:                                       # Un-mute all
+        for session in sessions:
+            volume = session.SimpleAudioVolume
+            volume.SetMute(0, None)
 
 
 # def set_volume(device_name, volume):
@@ -126,3 +144,5 @@ def spk_volume():
 # find_output_device()
 
 # TODO: Any more functionalities here? - TBD
+
+print(spk_volume().GetMute())
