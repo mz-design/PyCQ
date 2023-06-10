@@ -114,20 +114,27 @@ def spk_volume():
     return volume
 
 
-def mute_all(flag):
-    sessions = AudioUtilities.GetAllSessions()
-    if flag:                                    # Mute
-        for session in sessions:
-            volume = session.SimpleAudioVolume
-            if session.Process and session.Process.name() == "python.exe":
-                volume.SetMute(0, None)
-            else:                               # Mute all audio streams except my own
-                volume.SetMute(1, None)
-    else:                                       # Un-mute all
-        for session in sessions:
-            volume = session.SimpleAudioVolume
-            volume.SetMute(0, None)
+def mute_all():                                 # Mute all audio streams except my own
+    # pythoncom.CoInitialize()
+    sessions = AudioUtilities.GetAllSessions()                                  # Mute
+    for session in sessions:
+        volume_vol = session.QueryInterface(IAudioEndpointVolume)
+        volume_mut = session.SimpleAudioVolume
+        if session.Process and session.Process.name() == "python.exe":
+            volume_vol.SetMasterVolume(-20.0, None)
+            volume_mut.SetMute(0, None)
+        else:                               # Mute all audio streams except my own
+            volume_vol.SetMasterVolume(constants.OUTPUT_VOLUME,None)
+            volume_mut.SetMute(1, None)
+    # pythoncom.CoUninitialize()
 
+def unmute_all():                                      # Un-mute all
+    # pythoncom.CoInitialize()
+    sessions = AudioUtilities.GetAllSessions()
+    for session in sessions:
+        volume = session.SimpleAudioVolume
+        volume.SetMute(0, None)
+    # pythoncom.CoUninitialize()
 
 # def set_volume(device_name, volume):
 #     devices = AudioUtilities.GetSpeakers()
