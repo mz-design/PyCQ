@@ -44,7 +44,7 @@ def receive_and_play_new_message(caller_ip, asset):
     print(save_path)
     download_file(url, save_path)
 
-    if constants.PLAY_C2A
+    if constants.PLAY_C2A:
         # play 'call_2_attention' preamble sound
         audio.voice_play(f'{constants.RESOURCE_FOLDER}/{constants.C2A_FILE}')
 
