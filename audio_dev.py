@@ -15,6 +15,7 @@ from comtypes import CLSCTX_ALL
 import logging
 from logger import Logger
 import pythoncom
+from time import sleep
 # Initialize logger
 logger = Logger(constants.LOG_FILE, level=constants.LOGGING_LEVEL)
 
@@ -118,14 +119,14 @@ def mute_all():                                 # Mute all audio streams except 
     # pythoncom.CoInitialize()
     sessions = AudioUtilities.GetAllSessions()                                  # Mute
     for session in sessions:
-        volume_vol = session.QueryInterface(IAudioEndpointVolume)
-        volume_mut = session.SimpleAudioVolume
+        volume = session.SimpleAudioVolume
         if session.Process and session.Process.name() == "python.exe":
-            volume_vol.SetMasterVolume(-20.0, None)
-            volume_mut.SetMute(0, None)
+            volume.SetMute(0, None)
+            volume.SetMasterVolume(1.0, None)
         else:                               # Mute all audio streams except my own
-            volume_vol.SetMasterVolume(constants.OUTPUT_VOLUME,None)
-            volume_mut.SetMute(1, None)
+            volume.SetMasterVolume(0.0, None)
+            volume.SetMute(1, None)
+            # volume.SetMute(1, None)
     # pythoncom.CoUninitialize()
 
 def unmute_all():                                      # Un-mute all
@@ -134,6 +135,7 @@ def unmute_all():                                      # Un-mute all
     for session in sessions:
         volume = session.SimpleAudioVolume
         volume.SetMute(0, None)
+        volume.SetMasterVolume(1.0, None)
     # pythoncom.CoUninitialize()
 
 # def set_volume(device_name, volume):
@@ -149,5 +151,7 @@ def unmute_all():                                      # Un-mute all
 # TODO: remove these debug lines
 # find_input_device()
 # find_output_device()
+# mute_all()
 
 # TODO: Any more functionalities here? - TBD
+

@@ -64,17 +64,18 @@ def voice_play(filename):
         audio_dev.spk_volume().SetMute(0, None)
         current_volume = audio_dev.spk_volume().GetMasterVolumeLevel()
         logger.add_log_entry(logging.DEBUG, f"Store current master volume level: {current_volume}")
+        # mute all sound streams except the own one
+        # audio_dev.mute_all()
+        # logger.add_log_entry(logging.DEBUG, f"Mute all sound sources except my one")
         # set desired master volume for playback
         audio_dev.spk_volume().SetMasterVolumeLevel(constants.OUTPUT_VOLUME, None)
         logger.add_log_entry(logging.DEBUG, f"Set playback volume to {constants.OUTPUT_VOLUME}")
-        # mute all sound streams except the own one
-        sleep(0.1)
-        audio_dev.mute_all()
-        logger.add_log_entry(logging.DEBUG, f"Mute all sound sources except my one")
+
         # play audio
         logger.add_log_entry(logging.INFO, f"Playing audio file {filename}")
         data, fs = sf.read(filename, dtype='float32')
         sd.play(data, samplerate=constants.SAMPLERATE)
+        audio_dev.mute_all()
         sd.wait()
         # un-mute back all sound streams
         audio_dev.unmute_all()
