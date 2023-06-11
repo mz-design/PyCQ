@@ -15,8 +15,7 @@ from station_data import StationData
 from time import sleep
 import logging
 from logger import Logger
-import sys
-from PySide6.QtWidgets import QApplication, QLabel, QRadioButton, QLineEdit, QPushButton, QVBoxLayout, QHBoxLayout, QWidget
+import tkinter as tk
 
 # Initialize log
 logger = Logger(constants.LOG_FILE, level=constants.LOGGING_LEVEL)
@@ -61,57 +60,43 @@ def record_and_send_new_message(cast, ip, ip_list):
 # GUI section
 def record_and_send():
     cast = cast_var.get()
-    ip = ip_entry.text()
-    ip_list = ip_list_entry.text()
+    ip = ip_entry.get()
+    ip_list = ip_list_entry.get()
     # Record and send message with given parameters
     record_and_send_new_message(cast, ip, ip_list)
 
 
-app = QApplication(sys.argv)
-window = QWidget()
-window.setWindowTitle("Record and Send Message")
+# Create GUI window
+window = tk.Tk()
+window.title("Record and Send Message")
 
-cast_label = QLabel("Cast Type:")
-cast_var = "uni-cast"
-cast_radio1 = QRadioButton("Uni-cast", checked=True)
-cast_radio1.toggled.connect(lambda: setattr(cast_radio1, "isChecked", True) if cast_radio1.isChecked() else setattr(cast_radio2, "isChecked", True))
-cast_radio2 = QRadioButton("Multicast")
-cast_radio2.toggled.connect(lambda: setattr(cast_radio2, "isChecked", True) if cast_radio2.isChecked() else setattr(cast_radio1, "isChecked", True))
+# Create GUI elements
+cast_label = tk.Label(window, text="Cast Type:")
+cast_var = tk.StringVar(value="uni-cast")
+cast_radio1 = tk.Radiobutton(window, text="Uni-cast", variable=cast_var, value="uni-cast")
+cast_radio2 = tk.Radiobutton(window, text="Multicast", variable=cast_var, value="multi-cast")
 
-ip_label = QLabel("IP Address:")
-ip_entry = QLineEdit()
+ip_label = tk.Label(window, text="IP Address:")
+ip_entry = tk.Entry(window)
 
-ip_list_label = QLabel("IP List:")
-ip_list_entry = QLineEdit()
+ip_list_label = tk.Label(window, text="IP List:")
+ip_list_entry = tk.Entry(window)
 
-record_button = QPushButton("Record and Send")
-record_button.clicked.connect(record_and_send)
+record_button = tk.Button(window, text="Record and Send", command=record_and_send)
 
-cast_layout = QHBoxLayout()
-cast_layout.addWidget(cast_label)
-cast_layout.addWidget(cast_radio1)
-cast_layout.addWidget(cast_radio2)
+# Add elements to GUI window
+cast_label.grid(row=0, column=0)
+cast_radio1.grid(row=0, column=1)
+cast_radio2.grid(row=0, column=2)
 
-ip_layout = QHBoxLayout()
-ip_layout.addWidget(ip_label)
-ip_layout.addWidget(ip_entry)
+ip_label.grid(row=1, column=0)
+ip_entry.grid(row=1, column=1)
 
-ip_list_layout = QHBoxLayout()
-ip_list_layout.addWidget(ip_list_label)
-ip_list_layout.addWidget(ip_list_entry)
+ip_list_label.grid(row=2, column=0)
+ip_list_entry.grid(row=2, column=1)
 
-button_layout = QHBoxLayout()
-button_layout.addStretch()
-button_layout.addWidget(record_button)
-button_layout.addStretch()
+record_button.grid(row=3, column=1
+                   )
 
-layout = QVBoxLayout()
-layout.addLayout(cast_layout)
-layout.addLayout(ip_layout)
-layout.addLayout(ip_list_layout)
-layout.addStretch()
-layout.addLayout(button_layout)
-
-window.setLayout(layout)
-window.show()
-sys.exit(app.exec_())
+# Start GUI main loop
+window.mainloop()
