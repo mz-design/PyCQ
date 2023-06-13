@@ -8,7 +8,7 @@
 # ---------------------------------------------------------------------------------------
 
 import csv
-import pandas as pd
+# import pandas as pd
 import logging
 import constants
 
