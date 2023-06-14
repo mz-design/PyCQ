@@ -1,11 +1,16 @@
-from PySide6.QtCore import QTimer
+# ------------------------------------------------------------------------------------------------------
+# message_popup.py -  Defines the RoundedMessageWindow class to use with system messages
+#
+# Prerequisites: PySide6.QtWidgets, PySide6.QtCore, PySide6.QtGui
+#
+# initial release: 14.06.2023 - MichaelZ
+# ------------------------------------------------------------------------------------------------------
+
 from PySide6.QtWidgets import QApplication, QMainWindow, QLabel, QVBoxLayout, QWidget, QPushButton
 from PySide6.QtCore import Qt, QSize, QPoint
 from PySide6.QtGui import QPainter, QBrush, QColor, QPen, QIcon, QPixmap, QFont
-
-
+import threading
 import audio
-import constants
 
 
 class RoundedMessageWindow(QMainWindow):
@@ -117,16 +122,18 @@ class CloseButton(QPushButton):
 
 
 def play_file(filename):
-    # Implement your logic to play the file with the given filename
-    audio.voice_play(filename)
+    # Open thread for audio playback
+    audio_thread = threading.Thread(target=audio.voice_play, args=(filename,))
+    audio_thread.start()
     print(f"Playing file: {filename}")
+    audio_thread.join()
 
 
 # if __name__ == "__main__":
 #     app = QApplication([])
 #     app.setStyle("fusion")
 #
-#     audio_filename = f"{constants.MESSAGE_STORE}/2023-06-10_15-05-50.ogg"  # Replace with the actual filename
+#     audio_filename = f"{constants.MESSAGE_STORE}/2023-06-10_16-25-29.ogg"  # Replace with the actual filename
 #     popup = RoundedMessageWindow(f"New Voice Message    {datetime.datetime.now().strftime('%d/%m/%Y %H:%M:%S')}",
 #                                f"{constants.RESOURCE_FOLDER}/message-icon.png", audio_filename)
 #     popup.show()

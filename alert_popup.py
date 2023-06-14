@@ -1,17 +1,14 @@
 # ------------------------------------------------------------------------------------------------------
-# alert_popup.py -  Defines the RoundedPopupWindow class to use with system messages
+# alert_popup.py -  Defines the RoundedAlertWindow class to use with system messages
 #
 # Prerequisites: PySide6.QtWidgets, PySide6.QtCore, PySide6.QtGui
 #
 # initial release: 14.06.2023 - MichaelZ
 # ------------------------------------------------------------------------------------------------------
 
-from PySide6.QtCore import QTimer
 from PySide6.QtWidgets import QApplication, QMainWindow, QLabel, QVBoxLayout, QWidget, QPushButton
 from PySide6.QtCore import Qt, QSize, QPoint
 from PySide6.QtGui import QPainter, QBrush, QColor, QPen, QIcon, QPixmap, QFont
-
-import constants
 
 
 class RoundedAlertWindow(QMainWindow):
