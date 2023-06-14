@@ -1,27 +1,22 @@
-# ------------------------------------------------------------------------------------------------------
-# alert_popup.py -  Defines the RoundedPopupWindow class to use with system messages
-#
-# Prerequisites: PySide6.QtWidgets, PySide6.QtCore, PySide6.QtGui
-#
-# initial release: 14.06.2023 - MichaelZ
-# ------------------------------------------------------------------------------------------------------
-
 from PySide6.QtCore import QTimer
 from PySide6.QtWidgets import QApplication, QMainWindow, QLabel, QVBoxLayout, QWidget, QPushButton
 from PySide6.QtCore import Qt, QSize, QPoint
 from PySide6.QtGui import QPainter, QBrush, QColor, QPen, QIcon, QPixmap, QFont
 
+
+import audio
 import constants
 
 
-class RoundedAlertWindow(QMainWindow):
-    def __init__(self, message, image_path):
+class RoundedMessageWindow(QMainWindow):
+    def __init__(self, message, image_path, audio_filename):
         super().__init__(flags=Qt.Window | Qt.FramelessWindowHint | Qt.WindowStaysOnTopHint)
         self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
+        self.filename = audio_filename
 
         container = QWidget(self)
         layout = QVBoxLayout(container)
-        layout.setContentsMargins(20, 20, 20, 120)
+        layout.setContentsMargins(20, 20, 20, 20)
         layout.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         image_label = QLabel(self)
@@ -29,12 +24,21 @@ class RoundedAlertWindow(QMainWindow):
         self.setCustomImage(image_label, image_path)
 
         label = QLabel(message, self)
-        label.setFont(QFont("Arial", 12, QFont.Bold))  # Set the font size to 12, make it bold
-        label.setStyleSheet("color: black;")  # Set the text color to black
+        label.setFont(QFont("Arial", 12, QFont.Bold))
+        label.setStyleSheet("color: black;")
         label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        replay_button = QPushButton("Replay", self)
+        replay_button.clicked.connect(self.handleReplayButtonClick)
+        replay_button.setStyleSheet(
+            "QPushButton { background-color: green; color: white; border: none; border-radius: 5px; padding: 10px; }"
+            "QPushButton:hover { background-color: darkgreen; }"
+        )
+        replay_button.setFont(QFont("Arial", 10, QFont.Bold))
 
         layout.addWidget(image_label)
         layout.addWidget(label)
+        layout.addWidget(replay_button)
 
         self.setCentralWidget(container)
         self.setFixedSize(500, 500)
@@ -43,13 +47,12 @@ class RoundedAlertWindow(QMainWindow):
         self.close_button.move(455, 15)
         self.close_button.show()
 
-        self.drag_position = None  # Store the position where the drag started
+        self.drag_position = None
 
     def setCustomImage(self, label, image_path):
         image = QPixmap(image_path)
-        scaled_image = image.scaledToHeight(300)  # Adjust the scaling factor as per your needs
+        scaled_image = image.scaledToHeight(300)
 
-        # Calculate the position to center the image within the circular area
         image_x = (self.width() - scaled_image.width()) // 2
         image_y = (self.height() - scaled_image.height() - 100) // 2
 
@@ -78,6 +81,10 @@ class RoundedAlertWindow(QMainWindow):
 
     def mouseReleaseEvent(self, event):
         self.drag_position = None
+
+    def handleReplayButtonClick(self):
+        # Call an external function to play the file with the given filename
+        play_file(self.filename)
 
 
 class CloseButton(QPushButton):
@@ -109,11 +116,19 @@ class CloseButton(QPushButton):
         return pixmap
 
 
+def play_file(filename):
+    # Implement your logic to play the file with the given filename
+    audio.voice_play(filename)
+    print(f"Playing file: {filename}")
+
+
 # if __name__ == "__main__":
 #     app = QApplication([])
-#     app.setStyle("fusion")  # Set the application style to "fusion" for consistent look and feel
+#     app.setStyle("fusion")
 #
-#     popup = RoundedPopupWindow("Custom Text", f"{constants.RESOURCE_FOLDER}/intruder_alert.png")  # Replace "image.png" with your own image path
+#     audio_filename = f"{constants.MESSAGE_STORE}/2023-06-10_15-05-50.ogg"  # Replace with the actual filename
+#     popup = RoundedMessageWindow(f"New Voice Message    {datetime.datetime.now().strftime('%d/%m/%Y %H:%M:%S')}",
+#                                f"{constants.RESOURCE_FOLDER}/message-icon.png", audio_filename)
 #     popup.show()
 #
 #     app.exec()

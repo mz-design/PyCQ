@@ -8,23 +8,28 @@
 
 from PyQt6.QtWidgets import QApplication
 import audio
-from alert_popup import RoundedPopupWindow
+from message_popup import RoundedMessageWindow
+from alert_popup import RoundedAlertWindow
 import threading
 import constants
 
 
 def show_custom_popup(message, image, sound_file):
+
     image_path = f"{constants.RESOURCE_FOLDER}/{image}"
-    audio_file = f"{constants.RESOURCE_FOLDER}/{sound_file}"
+    if image == 'message-icon.png':
+        audio_file_path = f"{constants.MESSAGE_STORE}/{sound_file}"
+        popup = RoundedMessageWindow(message, image_path, audio_file_path)
+    else:
+        audio_file_path = f"{constants.RESOURCE_FOLDER}/{sound_file}"
+        popup = RoundedAlertWindow(message, image_path)
     # start playing audio in new thread
-    audio_thread = threading.Thread(target=audio.voice_play, args=(audio_file,))
+    audio_thread = threading.Thread(target=audio.voice_play, args=(audio_file_path,))
     audio_thread.start()
 
     # visual popup to user
     app = QApplication([])
-    popup = RoundedPopupWindow(message, image_path)
     popup.show()
-
     app.exec()
 
 
