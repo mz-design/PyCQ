@@ -92,7 +92,7 @@ def voice_play(filename):
         except Exception as e:
             print('An error occurred:', e)
             logger.add_log_entry(logging.ERROR, e)
-    return None
+        return None
 
 # TODO: Remove Tk() form after final debug - not required here
 # master = Tk()

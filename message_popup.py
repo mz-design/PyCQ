@@ -6,51 +6,57 @@
 # initial release: 14.06.2023 - MichaelZ
 # ------------------------------------------------------------------------------------------------------
 
-from PySide6.QtWidgets import QApplication, QMainWindow, QLabel, QVBoxLayout, QWidget, QPushButton
-from PySide6.QtCore import Qt, QSize, QPoint
+from PySide6.QtWidgets import QApplication, QLabel, QVBoxLayout, QHBoxLayout, QWidget, QPushButton, QSpacerItem, QSizePolicy
+from PySide6.QtCore import Qt, QSize
 from PySide6.QtGui import QPainter, QBrush, QColor, QPen, QIcon, QPixmap, QFont
-import threading
 import audio
 
-
-class RoundedMessageWindow(QMainWindow):
+class RoundedMessageWindow(QWidget):
     def __init__(self, message, image_path, audio_filename):
-        super().__init__(flags=Qt.Window | Qt.FramelessWindowHint | Qt.WindowStaysOnTopHint)
+        super().__init__()
+        self.setWindowFlags(Qt.Window | Qt.FramelessWindowHint | Qt.WindowStaysOnTopHint)
         self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
         self.filename = audio_filename
 
         container = QWidget(self)
         layout = QVBoxLayout(container)
         layout.setContentsMargins(20, 20, 20, 20)
-        layout.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        layout.setAlignment(Qt.AlignCenter)
 
         image_label = QLabel(self)
-        image_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.setCustomImage(image_label, image_path)
 
         label = QLabel(message, self)
         label.setFont(QFont("Arial", 12, QFont.Bold))
         label.setStyleSheet("color: black;")
-        label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        label.setAlignment(Qt.AlignCenter)
 
-        replay_button = QPushButton("Replay", self)
-        replay_button.clicked.connect(self.handleReplayButtonClick)
-        replay_button.setStyleSheet(
-            "QPushButton { background-color: green; color: white; border: none; border-radius: 5px; padding: 10px; }"
-            "QPushButton:hover { background-color: darkgreen; }"
-        )
-        replay_button.setFont(QFont("Arial", 10, QFont.Bold))
+        close_button = CloseButton(self)
 
-        layout.addWidget(image_label)
+        image_layout = QHBoxLayout()
+        image_layout.addSpacerItem(QSpacerItem(80, 1, QSizePolicy.Fixed, QSizePolicy.Fixed))
+        image_layout.addWidget(image_label)
+        image_layout.addWidget(close_button, alignment=Qt.AlignTop | Qt.AlignRight)
+
+        layout.addLayout(image_layout)
         layout.addWidget(label)
-        layout.addWidget(replay_button)
 
-        self.setCentralWidget(container)
+        if image_path.endswith('message-icon.png'):
+            # Voice message - provide 'replay' button
+            replay_button = QPushButton("Replay", self)
+            replay_button.clicked.connect(self.handleReplayButtonClick)
+            replay_button.setStyleSheet(
+                "QPushButton { background-color: green; color: white; border: none; border-radius: 5px; padding: 10px; }"
+                "QPushButton:hover { background-color: darkgreen; }"
+            )
+            replay_button.setFont(QFont("Arial", 10, QFont.Bold))
+
+            # Set the size of the replay button to 150 x 50
+            replay_button.setFixedSize(250, 50)
+
+            layout.addWidget(replay_button, 1, Qt.AlignCenter)
+
         self.setFixedSize(500, 500)
-
-        self.close_button = CloseButton(self)
-        self.close_button.move(455, 15)
-        self.close_button.show()
 
         self.drag_position = None
 
@@ -58,17 +64,14 @@ class RoundedMessageWindow(QMainWindow):
         image = QPixmap(image_path)
         scaled_image = image.scaledToHeight(300)
 
-        image_x = (self.width() - scaled_image.width()) // 2
-        image_y = (self.height() - scaled_image.height() - 100) // 2
-
         label.setPixmap(scaled_image)
-        label.setGeometry(image_x, image_y, scaled_image.width(), scaled_image.height())
+        label.setFixedSize(350,350)
 
     def paintEvent(self, event):
         painter = QPainter(self)
         painter.setRenderHint(QPainter.RenderHint.Antialiasing)
 
-        background_color = QColor(255, 255, 255, 200)
+        background_color = QColor(255, 255, 255, 50)
         painter.setBrush(QBrush(background_color))
         painter.setPen(Qt.NoPen)
 
@@ -88,7 +91,6 @@ class RoundedMessageWindow(QMainWindow):
         self.drag_position = None
 
     def handleReplayButtonClick(self):
-        # Call an external function to play the file with the given filename
         play_file(self.filename)
 
 
@@ -122,11 +124,49 @@ class CloseButton(QPushButton):
 
 
 def play_file(filename):
-    # Open thread for audio playback
-    audio_thread = threading.Thread(target=audio.voice_play, args=(filename,))
-    audio_thread.start()
+    audio.voice_play(filename)
     print(f"Playing file: {filename}")
-    audio_thread.join()
+
+
+# Example usage:
+if __name__ == "__main__":
+    app = QApplication([])
+
+    message1 = "Message 1"
+    image_path1 = "resources/message-icon.png"
+    audio_filename1 = "MsgStore/emergency_alarm.ogg"
+    window1 = RoundedMessageWindow(message1, image_path1, audio_filename1)
+    window1.show()
+
+    message2 = "Message 2"
+    image_path2 = "resources/intruder_alert.png"
+    audio_filename2 = "MsgStore/emergency_alarm.ogg"
+    window2 = RoundedMessageWindow(message2, image_path2, audio_filename2)
+    window2.show()
+
+    app.exec()
+
+
+
+
+# Usage example:
+# if __name__ == "__main__":
+#     app = QApplication([])
+#
+#     message1 = "Message 1"
+#     image_path1 = "resources/message-icon.png"
+#     audio_filename1 = "MsgStore/emergency_alarm.ogg"
+#     window1 = RoundedMessageWindow(message1, image_path1, audio_filename1)
+#     window1.show()
+#
+#     message2 = "Message 2"
+#     image_path2 = "resources/message-icon.png"
+#     audio_filename2 = "MsgStore/emergency_alarm.ogg"
+#     window2 = RoundedMessageWindow(message2, image_path2, audio_filename2)
+#     window2.show()
+#
+#     app.exec_()
+
 
 
 # if __name__ == "__main__":
