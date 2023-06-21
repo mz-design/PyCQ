@@ -1,7 +1,7 @@
 # ---------------------------------------------------------------------------------------------------
 # station.py - 'Station' procedures
 #
-# Prerequisites: PySide6,
+# Prerequisites: PySide6
 #
 # initial release: 30.05.2023 - MichaelZ
 # ---------------------------------------------------------------------------------------------------
@@ -25,6 +25,7 @@ import listener
 import tcp_server
 from logger import Logger
 import threading
+import multiprocessing
 
 # Initialize logger
 logger = Logger(constants.LOG_FILE, level=constants.LOGGING_LEVEL)
@@ -83,50 +84,67 @@ def show_tray_message(tray):
     tray.showMessage("PyCQ Beta 1.0.0", "MZ-Design 2023")
 
 
-def exit_application():
-    # Close the tray icon
+def create_tray_icon(exit_flag):
+    # Create the Application object
+    app = QApplication([])
+
+    # Create a system tray icon
+    tray = QSystemTrayIcon()
+    icon = QIcon(f"{constants.RESOURCE_FOLDER}/icon.png")
+    tray.setIcon(icon)
+    tray.setToolTip("PyCQ message client")
+
+    # Create a context menu for the system tray
+    menu = QMenu()
+    action = QAction("About")
+    action.triggered.connect(lambda: show_tray_message(tray))
+    menu.addAction(action)
+    exit_action = QAction("Exit")
+    exit_action.triggered.connect(lambda: exit_application(exit_flag, tray))  # Connect to the exit_application function
+    menu.addAction(exit_action)
+
+    # Set the context menu for the system tray
+    tray.setContextMenu(menu)
+
+    # Show the system tray icon
+    tray.show()
+
+    # Create thread objects for TCP server, HTTP server, and periodic register
+    thread_http_srv = threading.Thread(target=http_srv.start_http_server, args=(http_port,))
+    thread_tcp_server = threading.Thread(target=tcp_server.start_server, args=(my_hostname, tcp_port))
+    thread_periodic_register = threading.Thread(target=run_periodically,
+                                                args=(constants.STATION_REGISTER_INTERVAL, exit_flag))
+
+    # Start the threads
+    thread_http_srv.start()
+    thread_tcp_server.start()
+    thread_periodic_register.start()
+
+    # Start the application event loop
+    app.exec_()
+
+
+def exit_application(exit_flag, tray):
+    # Hide the tray icon
     tray.hide()
+
+    # Set the exit flag to stop the threads
+    exit_flag.set()
+
     # Terminate all application processes
     os._exit(0)
 
+def show_tray_icon():
+    # Create the exit flag as a global variable
+    exit_flag = multiprocessing.Event()
+
+    # Create a process for the tray icon and start it
+    icon_process = multiprocessing.Process(target=create_tray_icon, args=(exit_flag,))
+    icon_process.start()
+
+    # Wait for the tray icon process to finish
+    icon_process.join()
 
 
-# Create the Application object
-app = QApplication(sys.argv)
-app.setQuitOnLastWindowClosed(False)  # Ensure the application doesn't exit when the main window is closed
-
-# Create thread objects for TCP server, HTTP server, and periodic register
-exit_flag = threading.Event()
-thread_http_srv = threading.Thread(target=http_srv.start_http_server, args=(http_port,))
-thread_tcp_server = threading.Thread(target=tcp_server.start_server, args=(my_hostname, tcp_port))
-thread_periodic_register = threading.Thread(target=run_periodically, args=(constants.STATION_REGISTER_INTERVAL, exit_flag))
-
-# Start the threads
-thread_http_srv.start()
-thread_tcp_server.start()
-time.sleep(0.01)
-thread_periodic_register.start()
-
-# Create a system tray icon
-tray = QSystemTrayIcon()
-icon = QIcon(f"{constants.RESOURCE_FOLDER}/icon.png")
-tray.setIcon(icon)
-tray.setToolTip("PyCQ message client")
-
-# Create a context menu for the system tray
-menu = QMenu()
-action = QAction("About")
-action.triggered.connect(lambda: show_tray_message(tray))
-menu.addAction(action)
-exit_action = QAction("Exit")
-exit_action.triggered.connect(exit_application)  # Connect to the exit_application function
-menu.addAction(exit_action)
-
-# Set the context menu for the system tray
-tray.setContextMenu(menu)
-
-# Show the system tray icon
-tray.show()
-
-# Start the application event loop
-sys.exit(app.exec())
+if __name__ == '__main__':
+    show_tray_icon()
