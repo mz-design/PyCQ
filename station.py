@@ -29,7 +29,7 @@ import threading
 # Initialize logger
 logger = Logger(constants.LOG_FILE, level=constants.LOGGING_LEVEL)
 
-# Initialize data stores, check if they exist and create them when needed
+# Initialize data store, check if exists and create when needed
 directory = constants.MESSAGE_STORE
 if not os.path.exists(directory):
     os.makedirs(directory)
@@ -64,9 +64,17 @@ def register_to_service():
 
 
 def run_periodically(interval, exit_flag):
+    cleanup_counter = 0
     while not exit_flag.is_set():
-        logger.add_log_entry(logging.DEBUG, "Periodic Register started")
+        logger.add_log_entry(logging.DEBUG, "Periodic station Register started")
         print("periodic station register\n")
+        if cleanup_counter == 100:
+            logger.add_log_entry(logging.INFO, f"Periodic clean-up on clean-up counter {cleanup_counter}")
+            cleanup.clean_log(constants.LOG_FILE, constants.LOG_MAX_LINES)
+            cleanup.clean_history(constants.HISTORY, constants.HISTORY_MAX_ENTRIES)
+            cleanup.clean_AudioFiles(f'{constants.MESSAGE_STORE}/', constants.MESSAGE_STORE_MAX_FILES)
+            cleanup_counter = 0
+        cleanup_counter += 1
         register_to_service()
         time.sleep(interval)
 
