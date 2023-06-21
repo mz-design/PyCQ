@@ -75,6 +75,6 @@ def check_alive():
 
 def run_periodically(interval):
     while True:
-        print('periodic keep alive')      # TODO: remove this print after debug
+        logger.add_log_entry(logging.DEBUG, "Send periodic 'keep-alive' message")
         check_alive()
         time.sleep(interval)

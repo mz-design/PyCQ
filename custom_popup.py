@@ -9,7 +9,6 @@
 from PyQt6.QtWidgets import QApplication
 import audio
 from message_popup import RoundedMessageWindow
-from alert_popup import RoundedAlertWindow
 import threading
 import multiprocessing
 import constants
@@ -25,12 +24,8 @@ def create_custom_popup(message, image, sound_file):
         app.setStyle("fusion")
 
         image_path = f"{constants.RESOURCE_FOLDER}/{image}"
-        if image == 'message-icon.png':
-            audio_file_path = f"{constants.MESSAGE_STORE}/{sound_file}"
-            popup = RoundedMessageWindow(message, image_path, audio_file_path)
-        else:
-            audio_file_path = f"{constants.RESOURCE_FOLDER}/{sound_file}"
-            popup = RoundedAlertWindow(message, image_path)
+        audio_file_path = f"{constants.MESSAGE_STORE}/{sound_file}"
+        popup = RoundedMessageWindow(message, image_path, audio_file_path)
 
         # start playing audio in new thread
         audio_thread = threading.Thread(target=audio.voice_play, args=(audio_file_path,))

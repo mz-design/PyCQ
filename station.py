@@ -1,14 +1,17 @@
 # ---------------------------------------------------------------------------------------------------
 # station.py - 'Station' procedures
 #
-# Prerequisites:
+# Prerequisites: PySide6,
 #
 # initial release: 30.05.2023 - MichaelZ
 # ---------------------------------------------------------------------------------------------------
 
 import os
+import sys
+from PySide6.QtWidgets import QApplication, QSystemTrayIcon, QMenu
+from PySide6.QtGui import QIcon, QAction
+from PySide6.QtCore import QCoreApplication
 import constants
-import threading
 import logging
 from socket import socket, gethostbyname, gethostname
 import time
@@ -17,32 +20,30 @@ import csv_ops
 import tcp_client
 from tcp_message import TcpMessage
 import http_srv
-# import keep_alive
-# import announcer
 import cleanup
 import listener
 import tcp_server
 from logger import Logger
-
+import threading
 
 # Initialize logger
 logger = Logger(constants.LOG_FILE, level=constants.LOGGING_LEVEL)
 
-# initialize data stores, check if exists and create when needed
+# Initialize data stores, check if they exist and create them when needed
 directory = constants.MESSAGE_STORE
 if not os.path.exists(directory):
     os.makedirs(directory)
 if not os.path.exists(constants.HISTORY):
     csv_ops.open_csv_file(constants.HISTORY)
 
-# perform cleanups on startup
+# Perform cleanups on startup
 cleanup.clean_log(constants.LOG_FILE, constants.LOG_MAX_LINES)
 cleanup.clean_history(constants.HISTORY, constants.HISTORY_MAX_ENTRIES)
 cleanup.clean_AudioFiles(f'{constants.MESSAGE_STORE}/', constants.MESSAGE_STORE_MAX_FILES)
 
-# get configuration from constants
+# Get configuration from constants
 udp_port = constants.UDP_PORT
-magic = constants.MAGIC  # UDP 'magic word'
+magic = constants.MAGIC
 tcp_port = constants.TCP_PORT
 http_port = constants.HTTP_PORT
 
@@ -56,33 +57,68 @@ logger.add_log_entry(logging.WARNING, f"Station {my_hostname} {my_ip} is OFFLINE
 
 def register_to_service():
     if station_status.StationStatus != 'online':
-        # Wait for 'Caller announcement' and get 'Caller IP' and 'Caller HOSTNAME'
         caller_ip, caller_hostname = listener.listen_for_service(udp_port, magic)
-        # encode 'REGISTER' message
         data = TcpMessage.create(TcpMessage(my_ip, my_hostname, 'REGISTER', ''))
-        # send to 'Caller'
         tcp_client.start_client(caller_ip, constants.TCP_PORT, data)
-        logger.add_log_entry(logging.DEBUG, f"Sent 'REGISTER' message to {caller_hostname} with ip {caller_ip}")
+        logger.add_log_entry(logging.DEBUG, f"Sent 'REGISTER' message to {caller_hostname} with IP {caller_ip}")
 
 
-def run_periodically(interval):
-    while True:
+def run_periodically(interval, exit_flag):
+    while not exit_flag.is_set():
         logger.add_log_entry(logging.DEBUG, "Periodic Register started")
         print("periodic station register\n")
         register_to_service()
         time.sleep(interval)
 
 
-# Create thread objects for TCP server, HTTP server and periodic register
+def show_tray_message(tray):
+    tray.showMessage("PyCQ Beta 1.0.0", "MZ-Design 2023")
+
+
+def exit_application():
+    # Close the tray icon
+    tray.hide()
+    # Terminate all application processes
+    os._exit(0)
+
+
+
+# Create the Application object
+app = QApplication(sys.argv)
+app.setQuitOnLastWindowClosed(False)  # Ensure the application doesn't exit when the main window is closed
+
+# Create thread objects for TCP server, HTTP server, and periodic register
+exit_flag = threading.Event()
 thread_http_srv = threading.Thread(target=http_srv.start_http_server, args=(http_port,))
 thread_tcp_server = threading.Thread(target=tcp_server.start_server, args=(my_hostname, tcp_port))
-thread_periodic_register = threading.Thread(target=run_periodically, args=(constants.STATION_REGISTER_INTERVAL,))
-# thread_announcer = threading.Thread(target=announcer.announce_service, args=(udp_port, magic, announce_interval))
-# thread_periodic_keep_alive = threading.Thread(target=keep_alive.run_periodically, args=(keep_alive_interval, ))
+thread_periodic_register = threading.Thread(target=run_periodically, args=(constants.STATION_REGISTER_INTERVAL, exit_flag))
 
-# Start threads
+# Start the threads
 thread_http_srv.start()
 thread_tcp_server.start()
 time.sleep(0.01)
 thread_periodic_register.start()
 
+# Create a system tray icon
+tray = QSystemTrayIcon()
+icon = QIcon(f"{constants.RESOURCE_FOLDER}/icon.png")
+tray.setIcon(icon)
+tray.setToolTip("PyCQ message client")
+
+# Create a context menu for the system tray
+menu = QMenu()
+action = QAction("About")
+action.triggered.connect(lambda: show_tray_message(tray))
+menu.addAction(action)
+exit_action = QAction("Exit")
+exit_action.triggered.connect(exit_application)  # Connect to the exit_application function
+menu.addAction(exit_action)
+
+# Set the context menu for the system tray
+tray.setContextMenu(menu)
+
+# Show the system tray icon
+tray.show()
+
+# Start the application event loop
+sys.exit(app.exec())

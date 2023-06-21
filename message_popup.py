@@ -134,13 +134,13 @@ if __name__ == "__main__":
 
     message1 = "Message 1"
     image_path1 = "resources/message-icon.png"
-    audio_filename1 = "MsgStore/emergency_alarm.ogg"
+    audio_filename1 = "resources/emergency_alarm.ogg"
     window1 = RoundedMessageWindow(message1, image_path1, audio_filename1)
     window1.show()
 
     message2 = "Message 2"
     image_path2 = "resources/intruder_alert.png"
-    audio_filename2 = "MsgStore/emergency_alarm.ogg"
+    audio_filename2 = "resources/emergency_alarm.ogg"
     window2 = RoundedMessageWindow(message2, image_path2, audio_filename2)
     window2.show()
 
