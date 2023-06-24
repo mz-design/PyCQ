@@ -24,7 +24,13 @@ def create_custom_popup(message, image, sound_file):
         app.setStyle("fusion")
 
         image_path = f"{constants.RESOURCE_FOLDER}/{image}"
-        audio_file_path = f"{constants.MESSAGE_STORE}/{sound_file}"
+        if image == "message-icon.png":
+            # new voice message
+            audio_file_path = f"{constants.MESSAGE_STORE}/{sound_file}"
+        else:
+            # alarm message
+            audio_file_path = f"{constants.RESOURCE_FOLDER}/{sound_file}"
+
         popup = RoundedMessageWindow(message, image_path, audio_file_path)
 
         # start playing audio in new thread
@@ -44,9 +50,9 @@ def show_custom_popup(message, image, sound_file):
     popup_process.start()
     popup_process.join()
 
-# if __name__ == '__main__':
-#     show_custom_popup("New voice message", "message-icon.png", "emergency_alarm.ogg")
-# show_custom_popup("Missile alert - Go to shelter immediately!!!", 'rocket.png', "emergency_alarm.ogg")
+if __name__ == '__main__':
+    # show_custom_popup("New voice message", "message-icon.png", "emergency_alarm.ogg")
+    show_custom_popup("Missile alert - Go to shelter immediately!!!", 'rocket.png', "emergency_alarm.ogg")
 # show_custom_popup("Fire alert - immediately proceed to emergency exit !!!", 'fire_alert.png', "emergency_alarm.ogg")
 # show_custom_popup("Earthquake - immediately leave the building !!!", 'earthquake_alert.png', "emergency_alarm.ogg")
 # show_custom_popup("Tsunami - immediately proceed to evacuation !!!", 'tsunami_alert.png', "emergency_alarm.ogg")

@@ -8,9 +8,9 @@
 
 import os
 import sys
-from PySide6.QtWidgets import QApplication, QSystemTrayIcon, QMenu
+from PySide6.QtWidgets import QApplication, QSystemTrayIcon, QMenu, QWidget, QVBoxLayout, QSlider, QPushButton
 from PySide6.QtGui import QIcon, QAction
-from PySide6.QtCore import QCoreApplication
+from PySide6.QtCore import Qt
 import constants
 import logging
 from socket import socket, gethostbyname, gethostname
@@ -26,6 +26,7 @@ import tcp_server
 from logger import Logger
 import threading
 import multiprocessing
+import json
 
 # Initialize logger
 logger = Logger(constants.LOG_FILE, level=constants.LOGGING_LEVEL)
@@ -54,6 +55,13 @@ my_ip = gethostbyname(gethostname())
 # Initially set station_status to OFFLINE
 station_status.StationStatus = 'offline'
 logger.add_log_entry(logging.WARNING, f"Station {my_hostname} {my_ip} is OFFLINE")
+
+# Initialize transparency variable as a multiprocessing.Value
+transparency = multiprocessing.Value('i', constants.TRANSPARENCY)
+
+
+def update_transparency(value):
+    transparency.value = value
 
 
 def register_to_service():
@@ -99,6 +107,12 @@ def create_tray_icon(exit_flag):
     action = QAction("About")
     action.triggered.connect(lambda: show_tray_message(tray))
     menu.addAction(action)
+
+    # Add the transparency widget menu item
+    transparency_action = QAction("Change message popup transparency")
+    transparency_action.triggered.connect(lambda: show_transparency_widget())
+    menu.addAction(transparency_action)
+
     exit_action = QAction("Exit")
     exit_action.triggered.connect(lambda: exit_application(exit_flag, tray))  # Connect to the exit_application function
     menu.addAction(exit_action)
@@ -134,6 +148,7 @@ def exit_application(exit_flag, tray):
     # Terminate all application processes
     os._exit(0)
 
+
 def show_tray_icon():
     # Create the exit flag as a global variable
     exit_flag = multiprocessing.Event()
@@ -145,6 +160,99 @@ def show_tray_icon():
     # Wait for the tray icon process to finish
     icon_process.join()
 
+
+def show_transparency_widget():
+    # Create a separate process for the transparency widget
+    widget_process = multiprocessing.Process(target=create_transparency_widget, args=(transparency,))
+    widget_process.start()
+
+
+def create_transparency_widget(transparency):
+    # Create the Application object
+    app = QApplication([])
+
+    # Load transparency value from a file, or use a default value
+    try:
+        with open('transparency.json') as file:
+            transparency_value = json.load(file)
+    except FileNotFoundError:
+        transparency_value = constants.TRANSPARENCY
+
+    # Create the transparency widget
+    widget = QWidget()
+    widget.setWindowFlags(Qt.FramelessWindowHint)  # Remove window title
+    widget.setAttribute(Qt.WA_StyledBackground)  # Enable styling for the widget
+
+    # Create the slider
+    slider = QSlider(Qt.Horizontal)
+    slider.setMinimum(0)
+    slider.setMaximum(255)
+    slider.setValue(transparency_value)  # Set the initial value from the loaded transparency value
+
+    # Set the layout for the widget and add the slider
+    layout = QVBoxLayout(widget)
+    layout.addWidget(slider)
+
+    # Function to update the transparency of the widget
+    def update_transparency(value):
+        if value < 10:
+            widget.setWindowOpacity((value + 10) / 255)
+        else:
+            widget.setWindowOpacity(value / 255)
+        transparency.value = value
+
+        # Update the stored transparency value in the file
+        with open('transparency.json', 'w') as file:
+            json.dump(value, file)
+
+    # Connect the slider's valueChanged signal to update_transparency
+    slider.valueChanged.connect(update_transparency)
+
+    # Create the close button
+    close_button = QPushButton("Close")
+    close_button.setFixedSize(50, 20)
+
+    # Function to handle the close button click event
+    def close_widget():
+        widget.close()
+
+    # Connect the close button's clicked signal to close_widget
+    close_button.clicked.connect(close_widget)
+
+    # Add the close button to the layout
+    layout.addWidget(close_button)
+
+    widget.show()
+
+    # Get the current geometry of the widget
+    geometry = widget.geometry()
+
+    # Multiply the dimensions by 3
+    new_width = int(geometry.width() * 3)
+    new_height = int(geometry.height() * 1)
+
+    # Resize the widget
+    widget.resize(new_width, new_height)
+
+    # Get the dimensions of the screen
+    screen = app.primaryScreen()
+    screen_geometry = screen.geometry()
+
+    # Calculate the new position of the widget
+    new_x = screen_geometry.right() - widget.width() - 50
+    new_y = screen_geometry.bottom() - widget.height() - 40
+
+    # Move the widget to the new position
+    widget.move(new_x, new_y)
+
+    # Set the initial opacity of the widget
+    if transparency_value < 10:
+        widget.setWindowOpacity((transparency_value + 10) / 255)
+    else:
+        widget.setWindowOpacity(transparency_value / 255)
+
+    # Start the application event loop for the transparency widget
+    app.exec_()
 
 if __name__ == '__main__':
     show_tray_icon()

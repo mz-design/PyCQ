@@ -44,5 +44,9 @@ HISTORY_MAX_ENTRIES = 100
 MESSAGE_STORE_MAX_FILES = 100
 STATIONS = 'stations.csv'
 
+# GUI settings
+
+TRAY_ICON = 'resources/icon.png'
+TRANSPARENCY = 255  # Default value
 
 
