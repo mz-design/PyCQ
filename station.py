@@ -15,7 +15,6 @@ import constants
 import logging
 from socket import socket, gethostbyname, gethostname
 import time
-import station_status
 import csv_ops
 import tcp_client
 from tcp_message import TcpMessage
@@ -52,9 +51,6 @@ http_port = constants.HTTP_PORT
 my_hostname = gethostname()
 my_ip = gethostbyname(gethostname())
 
-# Initially set station_status to OFFLINE
-station_status.StationStatus = 'offline'
-logger.add_log_entry(logging.WARNING, f"Station {my_hostname} {my_ip} is OFFLINE")
 
 # Initialize transparency variable as a multiprocessing.Value
 transparency = multiprocessing.Value('i', constants.TRANSPARENCY)
@@ -65,11 +61,12 @@ def update_transparency(value):
 
 
 def register_to_service():
-    if station_status.StationStatus != 'online':
-        caller_ip, caller_hostname = listener.listen_for_service(udp_port, magic)
-        data = TcpMessage.create(TcpMessage(my_ip, my_hostname, 'REGISTER', ''))
-        tcp_client.start_client(caller_ip, constants.TCP_PORT, data)
-        logger.add_log_entry(logging.DEBUG, f"Sent 'REGISTER' message to {caller_hostname} with IP {caller_ip}")
+    # if station_status != 'online':
+    caller_ip, caller_hostname = listener.listen_for_service(udp_port, magic)
+    print(caller_ip, caller_hostname)
+    data = TcpMessage.create(TcpMessage(my_ip, my_hostname, 'REGISTER', ''))
+    tcp_client.start_client(caller_ip, constants.TCP_PORT, data)
+    logger.add_log_entry(logging.DEBUG, f"Sent 'REGISTER' message to {caller_hostname} with IP {caller_ip}")
 
 
 def run_periodically(interval, exit_flag):
