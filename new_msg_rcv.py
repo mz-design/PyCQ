@@ -59,24 +59,24 @@ def receive_and_play_new_message(caller_ip, asset):
         custom_popup.show_custom_popup(f"New Voice Message    {datetime.datetime.now().strftime('%d/%m/%Y %H:%M:%S')}",
                                        'message-icon.png', asset)
 
-    elif asset == "text":
-        pass
-        # text message
+    # elif asset == "text":
+    #     pass
+    #     # text message
     elif asset == "fire_alert":
-        pass
-        # fire_alert
+        show_custom_popup(f"{datetime.datetime.now().strftime('%d/%m/%Y %H:%M:%S')}\nFire alert - immediately proceed to emergency exit !!!", 'fire_alert.png', "emergency_alarm.ogg")
+
     elif asset == "earthquake_alert":
-        pass
-        # earthquake alert
+        show_custom_popup(f"{datetime.datetime.now().strftime('%d/%m/%Y %H:%M:%S')}\nEarthquake - immediately leave the building !!!", 'earthquake_alert.png', "emergency_alarm.ogg")
+
     elif asset == "tsunami_alert":
-        pass
-        # tsunami alert
+        show_custom_popup(f"{datetime.datetime.now().strftime('%d/%m/%Y %H:%M:%S')}\nTsunami - immediately proceed to evacuation !!!", 'tsunami_alert.png', "emergency_alarm.ogg")
+
     elif asset == "intruder_alert":
-        pass
-        # intruder alert
+        show_custom_popup(f"{datetime.datetime.now().strftime('%d/%m/%Y %H:%M:%S')}\nIntruder alert - follow security procedures !!!", 'intruder_alert.png', "emergency_alarm.ogg")
+
     elif asset == "missile_alert":
-        pass
-        # missile alert
+        show_custom_popup(f"{datetime.datetime.now().strftime('%d/%m/%Y %H:%M:%S')}\nMissile alert - Go to shelter immediately!!!", 'rocket.png', "emergency_alarm.ogg")
+
     else:
         logger.add_log_entry(f'Unexpected MESSAGE TYPE: {asset}')
 

@@ -15,7 +15,6 @@ import constants
 # Initialize logger
 from logger import Logger
 logger = Logger(constants.LOG_FILE, level=constants.LOGGING_LEVEL)
-
 def open_csv_file(filename):
     rows = []                      # Initialize the lines storage
 
@@ -37,7 +36,7 @@ def open_csv_file(filename):
         if filename == constants.STATIONS:
             fieldnames = 'IP', 'HOSTNAME'
         else:
-            fieldnames = 'TIME', 'ACTION', 'HOSTNAME', 'IP', 'ITEM'
+            fieldnames = 'TIME', 'HOSTNAME', 'IP', 'ASSET'
         with open(filename, 'w', newline='') as file:
             # Perform initial setup or write default data if needed
             writer = csv.DictWriter(file, fieldnames=fieldnames)

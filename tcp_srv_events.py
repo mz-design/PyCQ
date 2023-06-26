@@ -15,7 +15,9 @@ import tcp_client
 from tcp_message import TcpMessage
 from announcer import gethostname, gethostbyname
 from station_data import StationData
+from history_data import HistoryData
 import keep_alive
+import datetime
 import logging
 from logger import Logger
 
@@ -76,9 +78,11 @@ def process_message(data):
         # send to remote station
         tcp_client.start_client(ip, constants.TCP_PORT, data)
 
-    # elif message == 'NEW_MESSAGE_ACK':
-        # Process 'NEW_MESSAGE_ACK' (on Caller) - mark message as 'delivered'
-        # caller_update_messge_status(status=read)
+    elif message == 'NEW_MESSAGE_ACK':
+        # Add new entry to 'history.csv'
+        time = datetime.datetime.now().strftime('%d/%m/%Y %H:%M:%S')
+        new_line = HistoryData(time, hostname, ip, asset)
+        csv_ops.append_to_csv(constants.HISTORY, HistoryData.get_data(new_line))
 
     elif message == 'KEEP_ALIVE_REQ':
         # Encode 'KEEP_ALIVE_ACK'
