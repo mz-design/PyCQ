@@ -455,7 +455,7 @@ def get_broadcast_ip_list():
     ip_list = []
 
     # Extract data from the specified column (excluding the header row)
-    for row in rows[1:]:
+    for row in rows[0:]:
         if "IP" in row:
             ip_list.append(row["IP"])
     return ip_list
@@ -552,7 +552,9 @@ class ExampleApp(QtWidgets.QMainWindow, Ui_MainWindow):
         else:
             pass
             #addr_list = get_custom_ip_list()
+
         new_msg_send.record_and_send_new_message(addr_list, asset)
+
 
 
     # def refresh_history(self):
