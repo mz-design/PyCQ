@@ -12,7 +12,6 @@ import constants
 import datetime
 import threading
 
-import custom_popup
 import tcp_client
 from socket import gethostname, gethostbyname
 from custom_popup import show_custom_popup

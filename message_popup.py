@@ -8,10 +8,11 @@
 
 import json
 import constants
-from PySide6.QtWidgets import QApplication, QLabel, QVBoxLayout, QHBoxLayout, QWidget, QPushButton, QSpacerItem, QSizePolicy
-from PySide6.QtCore import Qt, QSize
-from PySide6.QtGui import QPainter, QBrush, QColor, QPen, QIcon, QPixmap, QFont
+from PyQt6.QtWidgets import QLabel, QVBoxLayout, QHBoxLayout, QWidget, QPushButton, QSpacerItem, QSizePolicy
+from PyQt6.QtCore import Qt, QSize
+from PyQt6.QtGui import QPainter, QBrush, QColor, QPen, QIcon, QPixmap, QFont
 import audio
+
 
 class RoundedMessageWindow(QWidget):
     def __init__(self, message, image_path, audio_filename):
@@ -174,7 +175,7 @@ def play_file(filename):
 #     window2 = RoundedMessageWindow(message2, image_path2, audio_filename2)
 #     window2.show()
 #
-    # app.exec()
+#     app.exec()
 
 
 
