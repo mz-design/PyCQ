@@ -30,7 +30,7 @@ alive = False
 
 def send_ping(destination):
     response_time = ping(destination)
-    if response_time is not None and response_time > 0:
+    if response_time is not None:
         print(f"Received response from {destination} in {response_time:.3f} ms")
         return True
     else:
