@@ -11,10 +11,9 @@ import requests
 import constants
 import datetime
 import threading
-
+import custom_popup
 import tcp_client
 from socket import gethostname, gethostbyname
-from custom_popup import show_custom_popup
 from tcp_message import TcpMessage
 from station_data import StationData
 import logging
@@ -62,19 +61,19 @@ def receive_and_play_new_message(caller_ip, asset):
     #     pass
     #     # text message
     elif asset == "fire_alert":
-        show_custom_popup(f"{datetime.datetime.now().strftime('%d/%m/%Y %H:%M:%S')}\nFire alert - immediately proceed to emergency exit !!!", 'fire_alert.png', "emergency_alarm.ogg")
+        custom_popup.show_custom_popup(f"{datetime.datetime.now().strftime('%d/%m/%Y %H:%M:%S')}\nFire alert - immediately proceed to emergency exit !!!", 'fire_alert.png', "emergency_alarm.ogg")
 
     elif asset == "earthquake_alert":
-        show_custom_popup(f"{datetime.datetime.now().strftime('%d/%m/%Y %H:%M:%S')}\nEarthquake - immediately leave the building !!!", 'earthquake_alert.png', "emergency_alarm.ogg")
+        custom_popup.show_custom_popup(f"{datetime.datetime.now().strftime('%d/%m/%Y %H:%M:%S')}\nEarthquake - immediately leave the building !!!", 'earthquake_alert.png', "emergency_alarm.ogg")
 
     elif asset == "tsunami_alert":
-        show_custom_popup(f"{datetime.datetime.now().strftime('%d/%m/%Y %H:%M:%S')}\nTsunami - immediately proceed to evacuation !!!", 'tsunami_alert.png', "emergency_alarm.ogg")
+        custom_popup.show_custom_popup(f"{datetime.datetime.now().strftime('%d/%m/%Y %H:%M:%S')}\nTsunami - immediately proceed to evacuation !!!", 'tsunami_alert.png', "emergency_alarm.ogg")
 
     elif asset == "intruder_alert":
-        show_custom_popup(f"{datetime.datetime.now().strftime('%d/%m/%Y %H:%M:%S')}\nIntruder alert - follow security procedures !!!", 'intruder_alert.png', "emergency_alarm.ogg")
+        custom_popup.show_custom_popup(f"{datetime.datetime.now().strftime('%d/%m/%Y %H:%M:%S')}\nIntruder alert - follow security procedures !!!", 'intruder_alert.png', "emergency_alarm.ogg")
 
     elif asset == "missile_alert":
-        show_custom_popup(f"{datetime.datetime.now().strftime('%d/%m/%Y %H:%M:%S')}\nMissile alert - Go to shelter immediately!!!", 'rocket.png', "emergency_alarm.ogg")
+        custom_popup.show_custom_popup(f"{datetime.datetime.now().strftime('%d/%m/%Y %H:%M:%S')}\nMissile alert - Go to shelter immediately!!!", 'rocket.png', "emergency_alarm.ogg")
 
     else:
         logger.add_log_entry(f'Unexpected MESSAGE TYPE: {asset}')
