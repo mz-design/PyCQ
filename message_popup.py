@@ -68,7 +68,7 @@ class RoundedMessageWindow(QWidget):
         scaled_image = image.scaledToHeight(300)
 
         label.setPixmap(scaled_image)
-        label.setFixedSize(350,350)
+        label.setFixedSize(350, 350)
 
     def paintEvent(self, event):
         painter = QPainter(self)
@@ -136,57 +136,3 @@ class CloseButton(QPushButton):
 def play_file(filename):
     audio.voice_play(filename)
     print(f"Playing file: {filename}")
-
-
-# Example usage:
-# if __name__ == "__main__":
-#     app = QApplication([])
-#
-#     message1 = "Message 1"
-#     image_path1 = "resources/message-icon.png"
-#     audio_filename1 = "resources/emergency_alarm.ogg"
-#     window1 = RoundedMessageWindow(message1, image_path1, audio_filename1)
-#     window1.show()
-#
-#     message2 = "Message 2"
-#     image_path2 = "resources/intruder_alert.png"
-#     audio_filename2 = "resources/emergency_alarm.ogg"
-#     window2 = RoundedMessageWindow(message2, image_path2, audio_filename2)
-#     window2.show()
-#
-#     app.exec()
-
-
-
-
-# Usage example:
-# if __name__ == "__main__":
-#     app = QApplication([])
-#
-#     message1 = "Warning rockets !!!"
-#     image_path1 = "resources/rocket.png"
-#     audio_filename1 = "resources/emergency_alarm.ogg"
-#     window1 = RoundedMessageWindow(message1, image_path1, audio_filename1)
-#     window1.show()
-#
-#     message2 = "Message 2"
-#     image_path2 = "resources/message-icon.png"
-#     audio_filename2 = "MsgStore/emergency_alarm.ogg"
-#     window2 = RoundedMessageWindow(message2, image_path2, audio_filename2)
-#     window2.show()
-#
-#     app.exec()
-
-
-
-# if __name__ == "__main__":
-#     app = QApplication([])
-#     app.setStyle("fusion")
-#
-#     audio_filename = f"{constants.MESSAGE_STORE}/2023-06-10_16-25-29.ogg"  # Replace with the actual filename
-#     popup = RoundedMessageWindow(f"New Voice Message    {datetime.datetime.now().strftime('%d/%m/%Y %H:%M:%S')}",
-#                                f"{constants.RESOURCE_FOLDER}/message-icon.png", audio_filename)
-#     popup.show()
-#
-#     app.exec()
-
