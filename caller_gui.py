@@ -64,6 +64,8 @@ thread_tcp_server.start()
 thread_announcer.start()
 time.sleep(0.1)
 thread_periodic_keep_alive.start()
+
+
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
@@ -260,7 +262,7 @@ class Ui_MainWindow(object):
         self.Messages = QtWidgets.QWidget()
         self.Messages.setObjectName("Messages")
         self.send_message_Button = QtWidgets.QPushButton(parent=self.Messages)
-        self.send_message_Button.setGeometry(QtCore.QRect(480, 140, 281, 261))
+        self.send_message_Button.setGeometry(QtCore.QRect(480, 70, 281, 261))
         self.send_message_Button.setToolTip("")
         self.send_message_Button.setStatusTip("")
         self.send_message_Button.setWhatsThis("")
@@ -311,7 +313,7 @@ class Ui_MainWindow(object):
         self.label_6.setFont(font)
         self.label_6.setObjectName("label_6")
         self.refresh_stations_button = QtWidgets.QPushButton(parent=self.Messages)
-        self.refresh_stations_button.setGeometry(QtCore.QRect(20, 520, 111, 31))
+        self.refresh_stations_button.setGeometry(QtCore.QRect(20, 510, 191, 51))
         font = QtGui.QFont()
         font.setFamily("Arial")
         font.setPointSize(14)
@@ -323,9 +325,13 @@ class Ui_MainWindow(object):
         self.refresh_stations_button.setStatusTip("")
         self.refresh_stations_button.setWhatsThis("<html><head/><body><p><span style=\" font-size:9pt;\">Click &quot;Refresh&quot; button to update active stations list</span></p></body></html>")
         self.refresh_stations_button.setStyleSheet("")
+        icon8 = QtGui.QIcon()
+        icon8.addPixmap(QtGui.QPixmap("resources/refresh_icon.png"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
+        self.refresh_stations_button.setIcon(icon8)
+        self.refresh_stations_button.setIconSize(QtCore.QSize(30, 30))
         self.refresh_stations_button.setObjectName("refresh_stations_button")
         self.label_7 = QtWidgets.QLabel(parent=self.Messages)
-        self.label_7.setGeometry(QtCore.QRect(600, 360, 151, 21))
+        self.label_7.setGeometry(QtCore.QRect(600, 290, 151, 21))
         font = QtGui.QFont()
         font.setFamily("Arial")
         font.setPointSize(14)
@@ -347,44 +353,55 @@ class Ui_MainWindow(object):
         self.tabWidget.addTab(self.Messages, icon7, "Voice Messages")
         self.tabWidget.setTabToolTip(self.tabWidget.indexOf(self.Messages), "Send Voice Messages")
         self.message_history = QtWidgets.QWidget()
+        self.message_history.setFocusPolicy(QtCore.Qt.FocusPolicy.NoFocus)
         self.message_history.setObjectName("message_history")
         self.history_tableWidget = QtWidgets.QTableWidget(parent=self.message_history)
-        self.history_tableWidget.setGeometry(QtCore.QRect(20, 40, 761, 441))
+        self.history_tableWidget.setGeometry(QtCore.QRect(-55, 40, 971, 441))
         font = QtGui.QFont()
         font.setFamily("Arial")
-        font.setPointSize(11)
-        font.setBold(True)
+        font.setPointSize(9)
+        font.setBold(False)
+        font.setKerning(True)
         self.history_tableWidget.setFont(font)
         self.history_tableWidget.setToolTip("")
         self.history_tableWidget.setStatusTip("")
         self.history_tableWidget.setWhatsThis("")
         self.history_tableWidget.setAccessibleName("")
+        self.history_tableWidget.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarPolicy.ScrollBarAsNeeded)
+        self.history_tableWidget.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarPolicy.ScrollBarAsNeeded)
+        self.history_tableWidget.setSizeAdjustPolicy(QtWidgets.QAbstractScrollArea.SizeAdjustPolicy.AdjustIgnored)
+        self.history_tableWidget.setAutoScrollMargin(50)
         self.history_tableWidget.setEditTriggers(QtWidgets.QAbstractItemView.EditTrigger.NoEditTriggers)
+        self.history_tableWidget.setAlternatingRowColors(True)
         self.history_tableWidget.setSelectionMode(QtWidgets.QAbstractItemView.SelectionMode.NoSelection)
         self.history_tableWidget.setGridStyle(QtCore.Qt.PenStyle.NoPen)
+        self.history_tableWidget.setWordWrap(False)
         self.history_tableWidget.setCornerButtonEnabled(False)
+        self.history_tableWidget.setColumnCount(5)
         self.history_tableWidget.setObjectName("history_tableWidget")
-        self.history_tableWidget.setColumnCount(0)
         self.history_tableWidget.setRowCount(0)
         self.history_tableWidget.horizontalHeader().setVisible(False)
-        self.history_tableWidget.horizontalHeader().setCascadingSectionResizes(True)
-        self.history_tableWidget.horizontalHeader().setDefaultSectionSize(150)
+        self.history_tableWidget.horizontalHeader().setCascadingSectionResizes(False)
+        self.history_tableWidget.horizontalHeader().setDefaultSectionSize(170)
         self.history_tableWidget.horizontalHeader().setHighlightSections(False)
         self.history_tableWidget.horizontalHeader().setMinimumSectionSize(30)
         self.history_tableWidget.horizontalHeader().setSortIndicatorShown(False)
+        self.history_tableWidget.horizontalHeader().setStretchLastSection(False)
         self.history_tableWidget.verticalHeader().setVisible(False)
         self.history_tableWidget.verticalHeader().setHighlightSections(False)
         self.history_tableWidget.verticalHeader().setSortIndicatorShown(False)
-        self.replay_message_button = QtWidgets.QPushButton(parent=self.message_history)
-        self.replay_message_button.setGeometry(QtCore.QRect(140, 510, 261, 31))
+        self.refresh_history_button = QtWidgets.QPushButton(parent=self.message_history)
+        self.refresh_history_button.setGeometry(QtCore.QRect(20, 500, 181, 51))
         font = QtGui.QFont()
         font.setFamily("Arial")
         font.setPointSize(14)
         font.setBold(False)
-        self.replay_message_button.setFont(font)
-        self.replay_message_button.setObjectName("replay_message_button")
+        self.refresh_history_button.setFont(font)
+        self.refresh_history_button.setIcon(icon8)
+        self.refresh_history_button.setIconSize(QtCore.QSize(30, 30))
+        self.refresh_history_button.setObjectName("refresh_history_button")
         self.resend_message_button = QtWidgets.QPushButton(parent=self.message_history)
-        self.resend_message_button.setGeometry(QtCore.QRect(430, 510, 251, 31))
+        self.resend_message_button.setGeometry(QtCore.QRect(260, 500, 171, 51))
         font = QtGui.QFont()
         font.setFamily("Arial")
         font.setPointSize(14)
@@ -392,7 +409,7 @@ class Ui_MainWindow(object):
         self.resend_message_button.setFont(font)
         self.resend_message_button.setObjectName("resend_message_button")
         self.label_9 = QtWidgets.QLabel(parent=self.message_history)
-        self.label_9.setGeometry(QtCore.QRect(190, 20, 51, 21))
+        self.label_9.setGeometry(QtCore.QRect(140, 20, 51, 21))
         font = QtGui.QFont()
         font.setFamily("Arial")
         font.setPointSize(14)
@@ -400,7 +417,7 @@ class Ui_MainWindow(object):
         self.label_9.setFont(font)
         self.label_9.setObjectName("label_9")
         self.label_10 = QtWidgets.QLabel(parent=self.message_history)
-        self.label_10.setGeometry(QtCore.QRect(310, 20, 121, 21))
+        self.label_10.setGeometry(QtCore.QRect(280, 20, 121, 21))
         font = QtGui.QFont()
         font.setFamily("Arial")
         font.setPointSize(14)
@@ -408,7 +425,7 @@ class Ui_MainWindow(object):
         self.label_10.setFont(font)
         self.label_10.setObjectName("label_10")
         self.label_11 = QtWidgets.QLabel(parent=self.message_history)
-        self.label_11.setGeometry(QtCore.QRect(480, 20, 91, 21))
+        self.label_11.setGeometry(QtCore.QRect(470, 20, 91, 21))
         font = QtGui.QFont()
         font.setFamily("Arial")
         font.setPointSize(14)
@@ -423,14 +440,35 @@ class Ui_MainWindow(object):
         font.setBold(False)
         self.label_12.setFont(font)
         self.label_12.setObjectName("label_12")
-        icon8 = QtGui.QIcon()
-        icon8.addPixmap(QtGui.QPixmap("resources/history-icon.ico"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
-        self.tabWidget.addTab(self.message_history, icon8, "")
+        self.replay_message_button = QtWidgets.QPushButton(parent=self.message_history)
+        self.replay_message_button.setGeometry(QtCore.QRect(470, 500, 171, 51))
+        font = QtGui.QFont()
+        font.setFamily("Arial")
+        font.setPointSize(14)
+        font.setBold(False)
+        self.replay_message_button.setFont(font)
+        self.replay_message_button.setObjectName("replay_message_button")
+        self.delete_messages_button = QtWidgets.QPushButton(parent=self.message_history)
+        self.delete_messages_button.setGeometry(QtCore.QRect(690, 490, 91, 71))
+        font = QtGui.QFont()
+        font.setFamily("Arial")
+        font.setPointSize(14)
+        font.setBold(False)
+        self.delete_messages_button.setFont(font)
+        self.delete_messages_button.setText("")
+        icon9 = QtGui.QIcon()
+        icon9.addPixmap(QtGui.QPixmap("resources/remove-icon.ico"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
+        self.delete_messages_button.setIcon(icon9)
+        self.delete_messages_button.setIconSize(QtCore.QSize(60, 60))
+        self.delete_messages_button.setObjectName("delete_messages_button")
+        icon10 = QtGui.QIcon()
+        icon10.addPixmap(QtGui.QPixmap("resources/history-icon.ico"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
+        self.tabWidget.addTab(self.message_history, icon10, "")
         self.tabWidget.setTabToolTip(self.tabWidget.indexOf(self.message_history), "Message history")
         MainWindow.setCentralWidget(self.centralwidget)
 
         self.retranslateUi(MainWindow)
-        self.tabWidget.setCurrentIndex(0)
+        self.tabWidget.setCurrentIndex(2)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
@@ -439,14 +477,15 @@ class Ui_MainWindow(object):
         self.missile_alert_Button.setStatusTip(_translate("MainWindow", "sdfsdfsdfsdf"))
         self.tsunami_alert_Button.setStatusTip(_translate("MainWindow", "sdfsdfsdfsdf"))
         self.label_6.setText(_translate("MainWindow", "Available Stations:"))
-        self.refresh_stations_button.setText(_translate("MainWindow", "Refresh"))
+        self.refresh_stations_button.setText(_translate("MainWindow", "Refresh Stations"))
         self.label_8.setText(_translate("MainWindow", "Station IP       Station Name"))
-        self.replay_message_button.setText(_translate("MainWindow", "Replay Selected Message"))
-        self.resend_message_button.setText(_translate("MainWindow", "Resend Selected Message"))
+        self.refresh_history_button.setText(_translate("MainWindow", "Refresh History"))
+        self.resend_message_button.setText(_translate("MainWindow", "Resend Selected"))
         self.label_9.setText(_translate("MainWindow", "Time"))
         self.label_10.setText(_translate("MainWindow", "Station Name"))
         self.label_11.setText(_translate("MainWindow", "Station IP"))
         self.label_12.setText(_translate("MainWindow", "Message"))
+        self.replay_message_button.setText(_translate("MainWindow", "Replay Selected"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.message_history), _translate("MainWindow", "Message History"))
 
 
@@ -461,6 +500,23 @@ def get_broadcast_ip_list():
     return ip_list
 
 
+def get_selected_values(table_widget, column):
+    selected_rows = []
+    for row_idx in range(table_widget.rowCount()):
+        checkbox_item = table_widget.cellWidget(row_idx, 0)
+        checkbox = checkbox_item.findChild(QtWidgets.QCheckBox)
+        if checkbox.isChecked():
+            selected_rows.append(row_idx)
+
+    values = []
+    for row_idx in selected_rows:
+        item = table_widget.item(row_idx, column)
+        if item is not None:
+            values.append(item.text())
+
+    return values
+
+
 class ExampleApp(QtWidgets.QMainWindow, Ui_MainWindow):
     def __init__(self):
         super().__init__()
@@ -468,15 +524,31 @@ class ExampleApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.load_stations_data()
         self.load_history_data()
 
-        # Connect the fire_alert_Button's clicked signal to the refresh_table function
+        # Connect alert_Button's clicked signals to send_message function
         self.fire_alert_Button.clicked.connect(lambda: self.send_message("fire_alert"))
+        self.intruder_alert_Button.clicked.connect(lambda: self.send_message("intruder_alert"))
+        self.missile_alert_Button.clicked.connect(lambda: self.send_message("missile_alert"))
+        self.earthquake_alert_Button.clicked.connect(lambda: self.send_message("earthquake_alert"))
+        self.tsunami_alert_Button.clicked.connect(lambda: self.send_message("tsunami_alert"))
+
+        # Connect send_message_Button's click signals to send_message function
+        self.send_message_Button.clicked.connect(lambda: self.send_message("voice_message"))
 
         # Connect the refresh_stations_button's clicked signal to the refresh_table function
         self.refresh_stations_button.clicked.connect(self.refresh_stations)
 
         # Connect the refresh_history_button's clicked signal to the refresh_table function
-        # self.refresh_historu_button.clicked.connect(self.refresh_stations)
+        self.refresh_history_button.clicked.connect(self.refresh_history)
 
+    def enforce_single_selection(self):
+        sender_checkbox = self.sender()
+
+        for row_idx in range(self.history_tableWidget.rowCount()):
+            checkbox_item = self.history_tableWidget.cellWidget(row_idx, 0)
+            checkbox = checkbox_item.findChild(QtWidgets.QCheckBox)
+
+            if checkbox is not sender_checkbox:
+                checkbox.setChecked(False)
     def load_stations_data(self):
         # Get the rows from the CSV file
         rows = csv_ops.open_csv_file(constants.STATIONS)
@@ -539,6 +611,12 @@ class ExampleApp(QtWidgets.QMainWindow, Ui_MainWindow):
                 item = QtWidgets.QTableWidgetItem(str(cell_data))
                 self.history_tableWidget.setItem(row_idx, col_idx, item)
 
+        # Connect the checkboxes' stateChanged signal to the enforce_single_selection function
+        for row_idx in range(self.history_tableWidget.rowCount()):
+            checkbox_item = self.history_tableWidget.cellWidget(row_idx, 0)
+            checkbox = checkbox_item.findChild(QtWidgets.QCheckBox)
+            checkbox.stateChanged.connect(self.enforce_single_selection)
+
     def refresh_stations(self):
         # Clear the existing table data
         self.stations_tableWidget.clearContents()
@@ -546,12 +624,18 @@ class ExampleApp(QtWidgets.QMainWindow, Ui_MainWindow):
         # Re-read the CSV file contents and update the table
         self.load_stations_data()
 
+    def refresh_history(self):
+        # Clear the existing table data
+        self.history_tableWidget.clearContents()
+
+        # Re-read the CSV file contents and update the table
+        self.load_history_data()
+
     def send_message(self, asset):
         if asset in ("fire_alert", "earthquake_alert", "intruder_alert", "tsunami_alert", "missile_alert"):
             addr_list = get_broadcast_ip_list()
         else:
-            pass
-            #addr_list = get_custom_ip_list()
+            addr_list = get_selected_values(self.stations_tableWidget, 1)
 
         new_msg_send.record_and_send_new_message(addr_list, asset)
 
