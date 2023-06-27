@@ -8,9 +8,9 @@
 
 import json
 import constants
-from PyQt6.QtWidgets import QLabel, QVBoxLayout, QHBoxLayout, QWidget, QPushButton, QSpacerItem, QSizePolicy
-from PyQt6.QtCore import Qt, QSize
-from PyQt6.QtGui import QPainter, QBrush, QColor, QPen, QIcon, QPixmap, QFont
+from PySide6.QtWidgets import QLabel, QVBoxLayout, QHBoxLayout, QWidget, QPushButton, QSpacerItem, QSizePolicy
+from PySide6.QtCore import Qt, QSize
+from PySide6.QtGui import QPainter, QBrush, QColor, QPen, QIcon, QPixmap, QFont
 import audio
 import constants
 import json
