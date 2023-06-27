@@ -43,16 +43,27 @@ def clean_history(csv_file, num_to_keep):
         # Read the CSV file into a pandas DataFrame
         df = pd.read_csv(csv_file)
 
-        # Identify the entries to be deleted
-        last_entries = df[-num_to_keep:]
+        # Check if the DataFrame has enough entries to keep
+        if len(df) > num_to_keep:
+            # Identify the entries to be deleted
+            if num_to_keep > 0:
+                entries_to_delete = df[:-num_to_keep]
+            else:
+                entries_to_delete = pd.DataFrame(columns=df.columns)  # Create an empty DataFrame with header
 
-        # Save the desired entries back to the CSV file
-        last_entries.to_csv(csv_file, index=False)
+            # Save the desired entries back to the CSV file
+            entries_to_delete.to_csv(csv_file, index=False)
 
-        logger.add_log_entry(logging.INFO, f'History cleanup: Keep {num_to_keep} latest CSV entries')
+            logger.add_log_entry(logging.INFO, f'History cleanup: Keep {num_to_keep} latest CSV entries')
+        else:
+            logger.add_log_entry(logging.INFO, 'No history cleanup needed. Not enough entries.')
 
-    except (FileNotFoundError, pd.errors.EmptyDataError) as e:
-        logger.add_log_entry(logging.ERROR, e)
+    except FileNotFoundError as e:
+        logger.add_log_entry(logging.ERROR, f'File not found: {csv_file}')
+    except pd.errors.EmptyDataError as e:
+        logger.add_log_entry(logging.ERROR, f'Empty data in CSV file: {csv_file}')
+    except Exception as e:
+        logger.add_log_entry(logging.ERROR, f'Error during history cleanup: {str(e)}')
 
 
 def clean_log(log_file, num_to_keep):
@@ -81,4 +92,4 @@ def clean_log(log_file, num_to_keep):
 # clean_log(log_file, num_to_keep=1000)
 #
 # csv_file = "history.csv"
-# clean_history(csv_file, num_to_keep=100)
+# clean_history(csv_file, num_to_keep=0)
