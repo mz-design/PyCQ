@@ -44,7 +44,7 @@ cleanup.clean_AudioFiles(f'{constants.MESSAGE_STORE}/', constants.MESSAGE_STORE_
 
 # get configuration from constants
 udp_port = constants.UDP_PORT
-magic = constants.MAGIC                                     # UDP 'magic word'
+magic = constants.MAGIC  # UDP 'magic word'
 announce_interval = constants.ANNOUNCE_INTERVAL
 tcp_port = constants.TCP_PORT
 keep_alive_interval = constants.KEEP_ALIVE_INTERVAL
@@ -57,7 +57,7 @@ http_port = constants.HTTP_PORT
 thread_http_srv = threading.Thread(target=http_srv.start_http_server, args=(http_port,))
 thread_tcp_server = threading.Thread(target=tcp_server.start_server, args=(socket.gethostname(), tcp_port))
 thread_announcer = threading.Thread(target=announcer.announce_service, args=(udp_port, magic, announce_interval))
-thread_periodic_keep_alive = threading.Thread(target=keep_alive.run_periodically, args=(keep_alive_interval, ))
+thread_periodic_keep_alive = threading.Thread(target=keep_alive.run_periodically, args=(keep_alive_interval,))
 
 # Start threads
 thread_http_srv.start()
@@ -179,7 +179,8 @@ class Ui_MainWindow(object):
         self.earthquake_alert_Button.setSizePolicy(sizePolicy)
         self.earthquake_alert_Button.setToolTip("Send Earthquake Alert")
         self.earthquake_alert_Button.setStatusTip("")
-        self.earthquake_alert_Button.setLocale(QtCore.QLocale(QtCore.QLocale.Language.English, QtCore.QLocale.Country.UnitedStates))
+        self.earthquake_alert_Button.setLocale(
+            QtCore.QLocale(QtCore.QLocale.Language.English, QtCore.QLocale.Country.UnitedStates))
         self.earthquake_alert_Button.setText("")
         icon4 = QtGui.QIcon()
         icon4.addPixmap(QtGui.QPixmap("resources/earthquake_alert.png"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
@@ -481,7 +482,8 @@ class Ui_MainWindow(object):
         self.label_11.setText(_translate("MainWindow", "Station IP"))
         self.label_12.setText(_translate("MainWindow", "Message"))
         self.replay_message_button.setText(_translate("MainWindow", "Play"))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.message_history), _translate("MainWindow", "Message History"))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.message_history),
+                                  _translate("MainWindow", "Message History"))
 
 
 def get_broadcast_ip_list():
@@ -539,8 +541,7 @@ class CallerApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.delete_messages_button.clicked.connect(self.delete_history)
 
         # Connect the replay_message_button's clicked signal to replay_message function
-        self.replay_message_button.clicked.connect(self.replay_message())
-
+        self.replay_message_button.clicked.connect(self.replay_message)
 
     def enforce_single_selection(self):
         sender_checkbox = self.sender()
@@ -551,6 +552,7 @@ class CallerApp(QtWidgets.QMainWindow, Ui_MainWindow):
 
             if checkbox is not sender_checkbox:
                 checkbox.setChecked(False)
+
     def load_stations_data(self):
         # Get the rows from the CSV file
         rows = csv_ops.open_csv_file(constants.STATIONS)
@@ -641,20 +643,19 @@ class CallerApp(QtWidgets.QMainWindow, Ui_MainWindow):
             logger.add_log_entry(logging.INFO, "Message history deleted by user")
 
     def replay_message(self):
-        asset = get_selected_values(self.history_tableWidget, 5)
+        asset = get_selected_values(self.history_tableWidget, 4)
         if not asset:
             self.show_warning_popup("No messages selected\nPlease select message!")
-        elif not asset[0].endswith(".ogg"): # not voice message
+        elif not asset[0].endswith(".ogg"):  # not voice message
             self.show_warning_popup("Alert Broadcasts can not be replayed! ")
         else:
-            audio.voice_play(asset[0])
-
-
+            audio.voice_play(f"{constants.MESSAGE_STORE}/{asset[0]}")
 
     def send_message(self, asset):
         if asset in ("fire_alert", "earthquake_alert", "intruder_alert", "tsunami_alert", "missile_alert"):
             addr_list = get_broadcast_ip_list()
-            if self.show_yes_no_popup("Confirmation", "Are you sure sending system broadcast?") == QMessageBox.StandardButton.No:
+            if self.show_yes_no_popup("Confirmation",
+                                      "Are you sure sending system broadcast?") == QMessageBox.StandardButton.No:
                 return None
         else:
             addr_list = get_selected_values(self.stations_tableWidget, 1)
@@ -667,7 +668,8 @@ class CallerApp(QtWidgets.QMainWindow, Ui_MainWindow):
 
         new_msg_send.record_and_send_new_message(addr_list, asset)
 
-    def show_warning_popup(self, message):
+    @staticmethod
+    def show_warning_popup(message):
         message_box = QMessageBox()
         message_box.setWindowIcon(QtGui.QIcon('resources/icon.png'))
         message_box.setIcon(QtWidgets.QMessageBox.Icon.Warning)
@@ -677,7 +679,9 @@ class CallerApp(QtWidgets.QMainWindow, Ui_MainWindow):
         message_box.exec()
 
     def show_yes_no_popup(self, title, message):
-        reply = QMessageBox.question(self, title, message, QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No, QMessageBox.StandardButton.No)
+        reply = QMessageBox.question(self, title, message,
+                                     QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
+                                     QMessageBox.StandardButton.No)
         return reply
 
     def closeEvent(self, event):
@@ -686,12 +690,6 @@ class CallerApp(QtWidgets.QMainWindow, Ui_MainWindow):
         # Terminate all application processes
         os._exit(0)
 
-    # def refresh_history(self):
-    #     # Clear the existing table data
-    #     self.history_tableWidget.clearContents()
-    #
-    #     # Re-read the CSV file contents and update the table
-    #     self.load_history_data()
 
 def main():
     app = QApplication(sys.argv)
