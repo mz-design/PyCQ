@@ -10,6 +10,8 @@ from PySide6.QtWidgets import QApplication, QLabel, QVBoxLayout, QHBoxLayout, QW
 from PySide6.QtCore import Qt, QSize
 from PySide6.QtGui import QPainter, QBrush, QColor, QPen, QIcon, QPixmap, QFont
 import audio
+import station
+
 
 class RoundedMessageWindow(QWidget):
     def __init__(self, message, image_path, audio_filename):
@@ -71,7 +73,7 @@ class RoundedMessageWindow(QWidget):
         painter = QPainter(self)
         painter.setRenderHint(QPainter.RenderHint.Antialiasing)
 
-        background_color = QColor(255, 255, 255, 50)
+        background_color = QColor(255, 255, 255, station.transparency)
         painter.setBrush(QBrush(background_color))
         painter.setPen(Qt.NoPen)
 
