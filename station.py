@@ -7,13 +7,12 @@
 # ---------------------------------------------------------------------------------------------------
 
 import os
-import sys
 from PySide6.QtWidgets import QApplication, QSystemTrayIcon, QMenu, QWidget, QVBoxLayout, QSlider, QPushButton
 from PySide6.QtGui import QIcon, QAction
 from PySide6.QtCore import Qt
 import constants
 import logging
-from socket import socket, gethostbyname, gethostname
+from socket import gethostbyname, gethostname
 import time
 import csv_ops
 import tcp_client
@@ -61,7 +60,6 @@ def update_transparency(value):
 
 
 def register_to_service():
-    # if station_status != 'online':
     caller_ip, caller_hostname = listener.listen_for_service(udp_port, magic)
     print(caller_ip, caller_hostname)
     data = TcpMessage.create(TcpMessage(my_ip, my_hostname, 'REGISTER', ''))
@@ -250,6 +248,7 @@ def create_transparency_widget(transparency):
 
     # Start the application event loop for the transparency widget
     app.exec_()
+
 
 if __name__ == '__main__':
     show_tray_icon()
