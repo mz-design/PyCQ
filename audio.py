@@ -15,16 +15,10 @@ import datetime
 import os
 import logging
 import threading
-from time import sleep
 import audio_dev
 from logger import Logger
 
 logger = Logger(constants.LOG_FILE, level=constants.LOGGING_LEVEL)
-
-
-# TODO: Left for debug - remove after
-# devices = sd.query_devices()
-# print(devices)
 
 
 def voice_rec():
@@ -52,7 +46,7 @@ def voice_rec():
         logger.add_log_entry(logging.INFO, f"Save {filename} to {constants.MESSAGE_STORE} - success ")
 
     except Exception as e:
-        print('An error occurred:', e)
+        # print('An error occurred:', e)
         logger.add_log_entry(logging.ERROR, e)
     return filename
 
@@ -85,28 +79,11 @@ def voice_play(filename):
             # restore current master volume settings
             audio_dev.spk_volume().SetMasterVolumeLevel(current_volume, None)
             logger.add_log_entry(logging.DEBUG, f"Restore master volume to stored value: {current_volume}")
-            # un-mute back all sound streams
+            # Unmute back all sound streams
             audio_dev.unmute_all()
             logger.add_log_entry(logging.DEBUG, f"Un-mute all active sound sources")
 
         except Exception as e:
-            print('An error occurred:', e)
+            # print('An error occurred:', e)
             logger.add_log_entry(logging.ERROR, e)
         return None
-
-# TODO: Remove Tk() form after final debug - not required here
-# master = Tk()
-#
-# Label(master, text="Voice REC/PLAY debug").grid(row=0, sticky=W, rowspan=5)
-#
-# rec_button = Button(master, text="Record", command=voice_rec)
-# rec_button.grid(row=0, column=2, columnspan=2, rowspan=2, padx=5, pady=5)
-#
-# play_button = Button(master, text="Play", command=voice_play)
-# play_button.grid(row=2, column=2, columnspan=2, rowspan=2, padx=5, pady=5)
-#
-# mainloop()
-
-# TODO: Any more functionalities here? - TBD
-
-# voice_play('MsgStore/2023-06-08_14-02-27.ogg')

@@ -82,14 +82,3 @@ def clean_log(log_file, num_to_keep):
 
     except Exception as e:
         logger.add_log_entry(logging.ERROR, e)
-
-
-# TODO: "remove usage example below after debug"
-# folder_path = "MsgStore/"
-# clean_AudioFiles(folder_path, num_to_keep=100)
-#
-# log_file = "pyCQ.log"
-# clean_log(log_file, num_to_keep=1000)
-#
-# csv_file = "history.csv"
-# clean_history(csv_file, num_to_keep=0)

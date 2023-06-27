@@ -26,21 +26,4 @@ class Logger:
     def add_log_entry(self, level, information):
         self.logger.log(level, information)
 
-
-# TODO: Remove usage example below after debug
-# Usage Example:
-# Starting the module set the suggested '.log' file name and minimal display log entry severity:
-# DEBUG (default) is lowest display severity ... CRITICAL is highest display severity
-#
-#   logger = Logger(constants.LOG_FILE, level=constants.LOGGING_LEVEL)
-
-# Adding log entry to selected file:
-#
-#   logger.add_log_entry(logging.DEBUG, "This is a debug log entry.")
-#   logger.add_log_entry(logging.INFO, 'This is an info log entry.')
-#   logger.add_log_entry(logging.WARNING, 'This is a warning log entry.')
-#   logger.add_log_entry(logging.ERROR, 'This is an error log entry.')
-#   logger.add_log_entry(logging.CRITICAL, 'This is a critical log entry.')
-
-
 # TODO: Any more functionalities here? - TBD

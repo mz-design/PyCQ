@@ -1,5 +1,5 @@
 # ------------------------------------------------------------------------------------------------------
-# new_msg_rcv.py -  Statio receive and play new message
+# new_msg_rcv.py -  Station receives and play new message
 #
 # Prerequisites: requests
 #
@@ -10,12 +10,8 @@ import audio
 import requests
 import constants
 import datetime
-import threading
 import custom_popup
-import tcp_client
 from socket import gethostname, gethostbyname
-from tcp_message import TcpMessage
-from station_data import StationData
 import logging
 from logger import Logger
 
@@ -32,34 +28,29 @@ def download_file(url, save_path):
     if response.status_code == 200:
         with open(save_path, 'wb') as file:
             file.write(response.content)
-        print("File downloaded successfully.")
+        # print("File downloaded successfully.")
         logger.add_log_entry(logging.INFO, f"New message file: {url} successfully downloaded to {save_path}")
     else:
-        print("Error downloading file.")
+        # print("Error downloading file.")
         logger.add_log_entry(f"Error downloading file: {url}")
 
 
 def receive_and_play_new_message(caller_ip, asset):
     if asset.endswith(constants.AUDIO_TYPE):  # we deal with audio message - get message file from 'Caller' http
         url = f'http://{caller_ip}:{constants.HTTP_PORT}/{constants.MESSAGE_STORE}/{asset}'
-        print(url)
+        # print(url)
+        logger.add_log_entry(logging.INFO, f"WEB server url is {url}")
         save_path = f'{constants.MESSAGE_STORE}/{asset}'
-        print(save_path)
+        # print(save_path)
+        logger.add_log_entry(logging.INFO, f"Saving file to path {save_path}")
         download_file(url, save_path)
-        # play 'call_2_attention' preamble sound
+        # play 'call_2_attention' preamble sound (defined in constants.PLAY_C2A)
         if constants.PLAY_C2A:
             audio.voice_play(f'{constants.RESOURCE_FOLDER}/{constants.C2A_FILE}')
-            # audio_file = f'{constants.RESOURCE_FOLDER}/{constants.C2A_FILE}'
-            # audio_thread = threading.Thread(target=audio.voice_play, args=(audio_file,))
-            # audio_thread.start()
-        # audio.voice_play(f'{constants.MESSAGE_STORE}/{asset}')
+
         # show custom popup and play audio message from file
         custom_popup.show_custom_popup(f"New Voice Message    {datetime.datetime.now().strftime('%d/%m/%Y %H:%M:%S')}",
                                        'message-icon.png', asset)
-
-    # elif asset == "text":
-    #     pass
-    #     # text message
     elif asset == "fire_alert":
         custom_popup.show_custom_popup(f"{datetime.datetime.now().strftime('%d/%m/%Y %H:%M:%S')}\nFire alert - immediately proceed to emergency exit !!!", 'fire_alert.png', "emergency_alarm.ogg")
 
@@ -77,8 +68,3 @@ def receive_and_play_new_message(caller_ip, asset):
 
     else:
         logger.add_log_entry(f'Unexpected MESSAGE TYPE: {asset}')
-
-# def send_new_message_ack(asset):
-# here comes code
-
-# receive_and_play_new_message('10.100.102.63', '2023-06-06_18-44-21.ogg')

@@ -11,12 +11,9 @@ import constants
 import tcp_client
 from announcer import gethostname, gethostbyname
 from tcp_message import TcpMessage
-from station_data import StationData
-import csv_ops
-from time import sleep
 import logging
 from logger import Logger
-import tkinter as tk
+# import tkinter as tk      # enable for debugging with simple Tk UI
 
 # Initialize log
 logger = Logger(constants.LOG_FILE, level=constants.LOGGING_LEVEL)
@@ -33,15 +30,14 @@ def record_and_send_new_message(addr_list, msg_type):
     # Check is this is a voice message
     if asset == "voice_message":
         # Record new message
-        print(f"Start Recording in 0.2 Sec !!! for {constants.REC_TIME} seconds") # it's just for debug
+        # print(f"Start Recording !!! for {constants.REC_TIME} seconds") # it's just for debug
         logger.add_log_entry(logging.INFO, f"Start Recording for {constants.REC_TIME} seconds")
-        sleep(0.2)   # it's just for debug
         try:
             asset = audio.voice_rec()
         except Exception as e:
-            print(f"An error occurred: {e}")
+            # print(f"An error occurred: {e}")
+            logger.add_log_entry(logging.ERROR, f"An error {e} occurred while recording audio")
             asset = None
-        print(asset)
 
     # Encode 'NEW_MESSAGE_IND' message
     data = TcpMessage.create(TcpMessage(my_ip, my_hostname, 'NEW_MESSAGE_IND', asset))
@@ -53,7 +49,7 @@ def record_and_send_new_message(addr_list, msg_type):
         logger.add_log_entry(logging.INFO, f"'NEW_MESSAGE_IND' sent to station {station_address}")
 
 
-# # GUI section
+# Simple Tk GUI section as Usage Example - remain for debugging
 # def record_and_send():
 #     cast = cast_var.get()
 #     ip = ip_entry.get()

@@ -93,6 +93,6 @@ def process_message(data):
         keep_alive.alive = True
     else:
         # Unexpected message - process as "msg_not_recognized" ERROR
-        print(f"ERROR - unexpected message type: {TcpMessage.parse(data).message}")
+        # print(f"ERROR - unexpected message type: {TcpMessage.parse(data).message}")
         logger.add_log_entry(logging.ERROR, f"ERROR - unexpected message type: {TcpMessage.parse(data).message}")
 

@@ -3,7 +3,7 @@
 #
 # Prerequisites:
 #
-# initial release: 30.05.2023 - MichaelZ
+# initial release: 30.05.2023 - MichaelZ - depricated - old initial version w/o GUI
 # ---------------------------------------------------------------------------------------------------
 import runpy
 

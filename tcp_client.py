@@ -22,7 +22,7 @@ def start_client(tcp_host, tcp_port, data):
     try:
         # Connect to the server
         client_socket.connect((tcp_host, tcp_port))
-        print(f"Connected to server at {tcp_host}:{tcp_port}")
+        # print(f"Connected to server at {tcp_host}:{tcp_port}")
         logger.add_log_entry(logging.INFO, f"Connected to server at {tcp_host}:{tcp_port}")
 
         # Send data to the server
@@ -31,22 +31,22 @@ def start_client(tcp_host, tcp_port, data):
         logger.add_log_entry(logging.DEBUG, f"sending TCP message: {message}")
 
     except socket.gaierror as e:
-        print(f"Address-related error occurred: {str(e)}")
+        # print(f"Address-related error occurred: {str(e)}")
         logger.add_log_entry(logging.ERROR, f"Address-related error occurred: {str(e)}")
     except socket.timeout as e:
-        print(f"Timeout error occurred: {str(e)}")
+        # print(f"Timeout error occurred: {str(e)}")
         logger.add_log_entry(logging.ERROR, f"Socket error occurred: {str(e)}")
     except socket.error as e:
-        print(f"Socket error occurred: {str(e)}")
+        # print(f"Socket error occurred: {str(e)}")
         logger.add_log_entry(logging.ERROR, f"Socket error occurred: {str(e)}")
     finally:
         # Close the client socket
         client_socket.close()
-        print("Client socket closed")
+        # print("Client socket closed")
         logger.add_log_entry(logging.INFO, "Client socket closed")
 
 
-# TODO: remove this Example usage after debug:
+# TODO: remove this Usage Example usage after debug:
 # tcp_host = '10.100.102.63'
 # tcp_port = 1234
 # start_client(tcp_host, tcp_port, "Hello!")

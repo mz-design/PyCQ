@@ -25,7 +25,7 @@ def listen_for_service(udp_port, udp_magic):
         try:
             data, addr = s.recvfrom(1024)  # wait for a packet
         except Exception as e:
-            print(f"Error receiving packet: {e}")
+            # print(f"Error receiving packet: {e}")
             logger.add_log_entry(logging.ERROR, f"Error receiving announcement packet: {e}")
             continue
 
@@ -39,11 +39,4 @@ def listen_for_service(udp_port, udp_magic):
     s.close()
     return caller_ip, caller_hostname
 
-# TODO: Register to 'Caller PC'
-# def register_to_service(caller_ip, tcp_port)
-
-
-# tcp_port = constants.UDP_PORT
-# magic = constants.MAGIC
-# listen_for_service(tcp_port, magic)
 

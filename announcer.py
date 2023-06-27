@@ -27,15 +27,15 @@ def announce_service(port, magic, interval):
         while True:
             data = magic + my_ip + gethostname()
             s.sendto(data.encode('utf-8'), ('<broadcast>', port))
-            print("Sent service announcement")
+            # print("Sent service announcement")
             logger.add_log_entry(logging.DEBUG, "Sent service announcement")
             sleep(interval)
     except Exception as e:
-        print(f"error occurred: {e}")
+        # print(f"error occurred: {e}")
         logger.add_log_entry(logging.CRITICAL, f"announcer - error occurred: {e}")
         s.close()
 
-# TODO: remove after debug
+# Usage Example:
 # tcp_port = 50000
 # magic = constants.MAGIC
 # interval = constants.ANNOUNCE_INTERVAL

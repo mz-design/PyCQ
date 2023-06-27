@@ -27,5 +27,3 @@ def start_http_server(port):
         print(f"Error: {e}")
         logger.add_log_entry(logging.ERROR, f"HTTP server error: {e}")
 
-
-# start_http_server(constants.HTTP_PORT)

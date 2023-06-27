@@ -14,6 +14,7 @@ import multiprocessing
 import constants
 from logger import Logger
 import logging
+
 # Initialize logger
 logger = Logger(constants.LOG_FILE, level=constants.LOGGING_LEVEL)
 
@@ -49,12 +50,3 @@ def show_custom_popup(message, image, sound_file):
     popup_process = multiprocessing.Process(target=create_custom_popup, args=(message, image, sound_file))
     popup_process.start()
     popup_process.join()
-
-# if __name__ == '__main__':
-#     # show_custom_popup("New voice message", "message-icon.png", "emergency_alarm.ogg")
-#     show_custom_popup("Missile alert - Go to shelter immediately!!!", 'rocket.png', "emergency_alarm.ogg")
-# # show_custom_popup("Fire alert - immediately proceed to emergency exit !!!", 'fire_alert.png', "emergency_alarm.ogg")
-# # show_custom_popup("Earthquake - immediately leave the building !!!", 'earthquake_alert.png', "emergency_alarm.ogg")
-# show_custom_popup("Tsunami - immediately proceed to evacuation !!!", 'tsunami_alert.png', "emergency_alarm.ogg")
-# show_custom_popup("Red alert - immediately go to nearest shelter !!!", 'red_alert.png', "emergency_alarm.ogg")
-# show_custom_popup("Intruder alert - follow security procedures !!!", 'intruder_alert.png', "emergency_alarm.ogg")
