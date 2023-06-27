@@ -10,6 +10,8 @@ from PySide6.QtWidgets import QApplication, QLabel, QVBoxLayout, QHBoxLayout, QW
 from PySide6.QtCore import Qt, QSize
 from PySide6.QtGui import QPainter, QBrush, QColor, QPen, QIcon, QPixmap, QFont
 import audio
+import constants
+import json
 
 class RoundedMessageWindow(QWidget):
     def __init__(self, message, image_path, audio_filename):
@@ -71,7 +73,14 @@ class RoundedMessageWindow(QWidget):
         painter = QPainter(self)
         painter.setRenderHint(QPainter.RenderHint.Antialiasing)
 
-        background_color = QColor(255, 255, 255, 50)
+        # Load popup transparency value from a file, or use a default value
+        try:
+            with open('transparency.json') as file:
+                transparency_value = json.load(file)
+        except FileNotFoundError:
+            transparency_value = constants.TRANSPARENCY
+
+        background_color = QColor(255, 255, 255, transparency_value)
         painter.setBrush(QBrush(background_color))
         painter.setPen(Qt.NoPen)
 
