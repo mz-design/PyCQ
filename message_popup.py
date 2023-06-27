@@ -6,12 +6,15 @@
 # initial release: 14.06.2023 - MichaelZ
 # ------------------------------------------------------------------------------------------------------
 
-from PySide6.QtWidgets import QApplication, QLabel, QVBoxLayout, QHBoxLayout, QWidget, QPushButton, QSpacerItem, QSizePolicy
-from PySide6.QtCore import Qt, QSize
-from PySide6.QtGui import QPainter, QBrush, QColor, QPen, QIcon, QPixmap, QFont
+import json
+import constants
+from PyQt6.QtWidgets import QLabel, QVBoxLayout, QHBoxLayout, QWidget, QPushButton, QSpacerItem, QSizePolicy
+from PyQt6.QtCore import Qt, QSize
+from PyQt6.QtGui import QPainter, QBrush, QColor, QPen, QIcon, QPixmap, QFont
 import audio
 import constants
 import json
+
 
 class RoundedMessageWindow(QWidget):
     def __init__(self, message, image_path, audio_filename):
@@ -138,22 +141,22 @@ def play_file(filename):
 
 
 # Example usage:
-if __name__ == "__main__":
-    app = QApplication([])
-
-    message1 = "Message 1"
-    image_path1 = "resources/message-icon.png"
-    audio_filename1 = "resources/emergency_alarm.ogg"
-    window1 = RoundedMessageWindow(message1, image_path1, audio_filename1)
-    window1.show()
-
-    message2 = "Message 2"
-    image_path2 = "resources/intruder_alert.png"
-    audio_filename2 = "resources/emergency_alarm.ogg"
-    window2 = RoundedMessageWindow(message2, image_path2, audio_filename2)
-    window2.show()
-
-    app.exec()
+# if __name__ == "__main__":
+#     app = QApplication([])
+#
+#     message1 = "Message 1"
+#     image_path1 = "resources/message-icon.png"
+#     audio_filename1 = "resources/emergency_alarm.ogg"
+#     window1 = RoundedMessageWindow(message1, image_path1, audio_filename1)
+#     window1.show()
+#
+#     message2 = "Message 2"
+#     image_path2 = "resources/intruder_alert.png"
+#     audio_filename2 = "resources/emergency_alarm.ogg"
+#     window2 = RoundedMessageWindow(message2, image_path2, audio_filename2)
+#     window2.show()
+#
+#     app.exec()
 
 
 
@@ -162,9 +165,9 @@ if __name__ == "__main__":
 # if __name__ == "__main__":
 #     app = QApplication([])
 #
-#     message1 = "Message 1"
-#     image_path1 = "resources/message-icon.png"
-#     audio_filename1 = "MsgStore/emergency_alarm.ogg"
+#     message1 = "Warning rockets !!!"
+#     image_path1 = "resources/rocket.png"
+#     audio_filename1 = "resources/emergency_alarm.ogg"
 #     window1 = RoundedMessageWindow(message1, image_path1, audio_filename1)
 #     window1.show()
 #
@@ -174,7 +177,7 @@ if __name__ == "__main__":
 #     window2 = RoundedMessageWindow(message2, image_path2, audio_filename2)
 #     window2.show()
 #
-#     app.exec_()
+#     app.exec()
 
 
 
@@ -188,3 +191,4 @@ if __name__ == "__main__":
 #     popup.show()
 #
 #     app.exec()
+
