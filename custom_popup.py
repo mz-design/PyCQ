@@ -14,6 +14,7 @@ import multiprocessing
 import constants
 from logger import Logger
 import logging
+import os
 
 # Initialize logger
 logger = Logger(constants.LOG_FILE, level=constants.LOGGING_LEVEL)
@@ -41,6 +42,11 @@ def create_custom_popup(message, image, sound_file):
         # visual popup to user
         popup.show()
         app.exec()
+        # delete audio file after message popup is closed
+        if os.path.exists(audio_file_path):
+            os.remove(audio_file_path)
+            # print(f"File '{asset}' deleted from MsgStore.")
+            logger.add_log_entry(logging.INFO, f"File '{audio_file_path}' deleted from MsgStore.")
     except Exception as e:
         print(f"Error: {e}")
         logger.add_log_entry(logging.ERROR, f"Exception: {e}")
