@@ -36,10 +36,8 @@ if not os.path.exists(directory):
 if not os.path.exists(constants.HISTORY):
     csv_ops.open_csv_file(constants.HISTORY)
 
-# Perform cleanups on startup
+# Perform log cleanup on startup
 cleanup.clean_log(constants.LOG_FILE, 0)
-cleanup.clean_pdf_file(constants.HISTORY, constants.HISTORY_MAX_ENTRIES)
-cleanup.clean_AudioFiles(f'{constants.MESSAGE_STORE}/', constants.MESSAGE_STORE_MAX_FILES)
 
 # Get configuration from constants
 udp_port = constants.UDP_PORT
@@ -72,11 +70,10 @@ def run_periodically(interval, exit_flag):
     while not exit_flag.is_set():
         logger.add_log_entry(logging.DEBUG, "Periodic station Register started")
         print("periodic station register\n")
-        if cleanup_counter == 100:
+        # clean-up log file on station periodically (kind of 'log rotator)'
+        if cleanup_counter == constants.LOG_ROTATOR_COUNTER:
             logger.add_log_entry(logging.INFO, f"Periodic clean-up on clean-up counter {cleanup_counter}")
             cleanup.clean_log(constants.LOG_FILE, constants.LOG_MAX_LINES)
-            cleanup.clean_pdf_file(constants.HISTORY, constants.HISTORY_MAX_ENTRIES)
-            cleanup.clean_AudioFiles(f'{constants.MESSAGE_STORE}/', constants.MESSAGE_STORE_MAX_FILES)
             cleanup_counter = 0
         cleanup_counter += 1
         register_to_service()

@@ -13,6 +13,7 @@ import csv_ops
 import tcp_client
 from tcp_message import TcpMessage
 from announcer import gethostbyname, gethostname
+import cleanup
 from logger import Logger
 
 # Initialize logger
@@ -59,7 +60,16 @@ def check_alive():
 
 
 def run_periodically(interval):
+    cleanup_counter = 0
     while True:
         logger.add_log_entry(logging.DEBUG, "Send periodic 'keep-alive' message")
         check_alive()
+
+        # clean-up log file on caller periodically (kind of 'log rotator)'
+        if cleanup_counter == constants.LOG_ROTATOR_COUNTER:
+            logger.add_log_entry(logging.INFO, f"Periodic clean-up on clean-up counter {cleanup_counter}")
+            cleanup.clean_log(constants.LOG_FILE, constants.LOG_MAX_LINES)
+            cleanup_counter = 0
+        cleanup_counter += 1
         time.sleep(interval)
+

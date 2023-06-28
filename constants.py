@@ -14,6 +14,7 @@ import logging
 LOGGING_LEVEL = logging.DEBUG
 LOG_FILE = 'PyCQ.log'
 LOG_MAX_LINES = 1000
+LOG_ROTATOR_COUNTER = 20        # Num of periodic register/keep-alive rounds before log is cleaned (1 round ~35-40 sec)
 
 # Communications
 
