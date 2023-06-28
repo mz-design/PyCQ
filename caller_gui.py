@@ -38,8 +38,9 @@ if not os.path.exists(constants.HISTORY):
     csv_ops.open_csv_file(constants.HISTORY)
 
 # perform cleanups on startup
-cleanup.clean_log(constants.LOG_FILE, constants.LOG_MAX_LINES)
-cleanup.clean_history(constants.HISTORY, constants.HISTORY_MAX_ENTRIES)
+cleanup.clean_log(constants.LOG_FILE, 0)
+cleanup.clean_pdf_file(constants.STATIONS, 0)
+cleanup.clean_pdf_file(constants.HISTORY, constants.HISTORY_MAX_ENTRIES)
 cleanup.clean_AudioFiles(f'{constants.MESSAGE_STORE}/', constants.MESSAGE_STORE_MAX_FILES)
 
 # get configuration from constants
@@ -637,7 +638,7 @@ class CallerApp(QtWidgets.QMainWindow, Ui_MainWindow):
 
     def delete_history(self):
         if self.show_yes_no_popup("Confirmation", "Delete Message History?") == QMessageBox.StandardButton.Yes:
-            cleanup.clean_history(constants.HISTORY, 0)
+            cleanup.clean_pdf_file(constants.HISTORY, 0)
             cleanup.clean_AudioFiles(constants.MESSAGE_STORE, 0)
             self.refresh_history()
             logger.add_log_entry(logging.INFO, "Message history deleted by user")

@@ -38,7 +38,7 @@ def clean_AudioFiles(folder_path, num_to_keep):
         logger.add_log_entry(logging.ERROR, e)
 
 
-def clean_history(csv_file, num_to_keep):
+def clean_pdf_file(csv_file, num_to_keep):
     try:
         # Read the CSV file into a pandas DataFrame
         df = pd.read_csv(csv_file)

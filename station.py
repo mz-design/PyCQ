@@ -37,9 +37,9 @@ if not os.path.exists(constants.HISTORY):
     csv_ops.open_csv_file(constants.HISTORY)
 
 # Perform cleanups on startup
-cleanup.clean_log(constants.LOG_FILE, constants.LOG_MAX_LINES)
-cleanup.clean_history(constants.HISTORY, constants.HISTORY_MAX_ENTRIES)
-cleanup.clean_AudioFiles(f'{constants.MESSAGE_STORE}/', constants.MESSAGE_STORE_MAX_FILES)
+cleanup.clean_log(constants.LOG_FILE, 0)
+cleanup.clean_pdf_file(constants.HISTORY, constants.HISTORY_MAX_ENTRIES)
+cleanup.clean_AudioFiles(f'{constants.MESSAGE_STORE}/', 0)
 
 # Get configuration from constants
 udp_port = constants.UDP_PORT
@@ -75,7 +75,7 @@ def run_periodically(interval, exit_flag):
         if cleanup_counter == 100:
             logger.add_log_entry(logging.INFO, f"Periodic clean-up on clean-up counter {cleanup_counter}")
             cleanup.clean_log(constants.LOG_FILE, constants.LOG_MAX_LINES)
-            cleanup.clean_history(constants.HISTORY, constants.HISTORY_MAX_ENTRIES)
+            cleanup.clean_pdf_file(constants.HISTORY, constants.HISTORY_MAX_ENTRIES)
             cleanup.clean_AudioFiles(f'{constants.MESSAGE_STORE}/', constants.MESSAGE_STORE_MAX_FILES)
             cleanup_counter = 0
         cleanup_counter += 1

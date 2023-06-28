@@ -37,7 +37,7 @@ if not os.path.exists(constants.HISTORY):
 
 # perform cleanups on startup
 cleanup.clean_log(constants.LOG_FILE, constants.LOG_MAX_LINES)
-cleanup.clean_history(constants.HISTORY, constants.HISTORY_MAX_ENTRIES)
+cleanup.clean_pdf_file(constants.HISTORY, constants.HISTORY_MAX_ENTRIES)
 cleanup.clean_AudioFiles(f'{constants.MESSAGE_STORE}/', constants.MESSAGE_STORE_MAX_FILES)
 
 # get configuration from constants

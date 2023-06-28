@@ -6,6 +6,7 @@
 # initial release: 31.05.2023 - MichaelZ
 # ------------------------------------------------------------------------------------------------------
 
+import os
 import constants
 import csv
 import csv_ops
@@ -71,10 +72,16 @@ def process_message(data):
     elif message == 'NEW_MESSAGE_IND':
         # station_retrieve_message(asset)
         new_msg_rcv.receive_and_play_new_message(ip, asset)
+        # delete audio file after message popup is closed
+        if os.path.exists(asset):
+            os.remove(asset)
+            # print(f"File '{asset}' deleted from MsgStore.")
+            logger.add_log_entry(logging.INFO, f"File '{asset}' deleted from MsgStore.")
         # Encode 'NEW_MESSAGE_ACK'
         data = TcpMessage.create(TcpMessage(my_ip, my_hostname, 'NEW_MESSAGE_ACK', asset))
         # send to remote station
         tcp_client.start_client(ip, constants.TCP_PORT, data)
+
 
     elif message == 'NEW_MESSAGE_ACK':
         # Add new entry to 'history.csv'
