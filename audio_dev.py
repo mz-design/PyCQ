@@ -138,6 +138,3 @@ def unmute_all():                               # Unmute all
         volume.SetMasterVolume(1.0, None)
     # pythoncom.CoUninitialize()                # Need only on 1-st pythoncom instance initialization
 
-
-# TODO: Any more functionalities here? - TBD
-

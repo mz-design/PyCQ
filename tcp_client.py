@@ -46,7 +46,7 @@ def start_client(tcp_host, tcp_port, data):
         logger.add_log_entry(logging.INFO, "Client socket closed")
 
 
-# TODO: remove this Usage Example usage after debug:
+# Usage Example:
 # tcp_host = '10.100.102.63'
 # tcp_port = 1234
 # start_client(tcp_host, tcp_port, "Hello!")

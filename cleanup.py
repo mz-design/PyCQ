@@ -59,9 +59,9 @@ def clean_pdf_file(csv_file, num_to_keep):
             logger.add_log_entry(logging.INFO, 'No history cleanup needed. Not enough entries.')
 
     except FileNotFoundError as e:
-        logger.add_log_entry(logging.ERROR, f'File not found: {csv_file}')
+        logger.add_log_entry(logging.ERROR, f'File not found: {csv_file} - error {e}')
     except pd.errors.EmptyDataError as e:
-        logger.add_log_entry(logging.ERROR, f'Empty data in CSV file: {csv_file}')
+        logger.add_log_entry(logging.ERROR, f'Empty data in CSV file: {csv_file} - error {e}')
     except Exception as e:
         logger.add_log_entry(logging.ERROR, f'Error during history cleanup: {str(e)}')
 
@@ -81,4 +81,4 @@ def clean_log(log_file, num_to_keep):
         logger.add_log_entry(logging.INFO, f'Logfile cleanup: Keep {num_to_keep} latest log entries')
 
     except Exception as e:
-        logger.add_log_entry(logging.ERROR, e)
+        logger.add_log_entry(logging.ERROR, f"Clean log file failed: {e}")

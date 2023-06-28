@@ -63,7 +63,8 @@ class RoundedMessageWindow(QWidget):
 
         self.drag_position = None
 
-    def setCustomImage(self, label, image_path):
+    @staticmethod
+    def setCustomImage(label, image_path):
         image = QPixmap(image_path)
         scaled_image = image.scaledToHeight(300)
 
@@ -74,7 +75,7 @@ class RoundedMessageWindow(QWidget):
         painter = QPainter(self)
         painter.setRenderHint(QPainter.RenderHint.Antialiasing)
 
-        # Load popup transparency value from a file, or use a default value
+        # Load popup transparency_value value from a file, or use a default value
         try:
             with open('transparency.json') as file:
                 transparency_value = json.load(file)
@@ -117,7 +118,8 @@ class CloseButton(QPushButton):
         self.clicked.connect(parent.close)
         self.setFixedSize(30, 30)
 
-    def createCloseIcon(self):
+    @staticmethod
+    def createCloseIcon():
         pixmap = QPixmap(30, 30)
         pixmap.fill(Qt.GlobalColor.transparent)
 

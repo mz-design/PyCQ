@@ -26,4 +26,3 @@ def start_http_server(port):
     except Exception as e:
         print(f"Error: {e}")
         logger.add_log_entry(logging.ERROR, f"HTTP server error: {e}")
-

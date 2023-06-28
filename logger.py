@@ -25,5 +25,3 @@ class Logger:
 
     def add_log_entry(self, level, information):
         self.logger.log(level, information)
-
-# TODO: Any more functionalities here? - TBD

@@ -75,7 +75,7 @@ def start_server(tcp_host, tcp_port):
             logger.add_log_entry(logging.ERROR, f"Error accepting client connection: {e}")
 
 
-# TODO: remove this Example usage after debug
+# Usage Example
 # host = "10.100.102.63"
 # port = 1234
 # start_server(host, port)

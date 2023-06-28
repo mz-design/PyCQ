@@ -45,7 +45,6 @@ class TcpMessage:
             logger.add_log_entry(logging.ERROR, f"TcpMessage - Error parsing data string: {e}")
 
 
-# TODO: Remove usage examples below after debugging
 # Usage examples of class:
 # received_data_string = "Sender IP: 192.168.0.1\nSender Hostname: myhostname\nMessage: Hello, TCP!"
 # received_message = TcpMessage.parse(received_data_string)

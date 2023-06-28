@@ -76,7 +76,6 @@ def process_message(data):
         # send to remote station
         tcp_client.start_client(ip, constants.TCP_PORT, data)
 
-
     elif message == 'NEW_MESSAGE_ACK':
         # Add new entry to 'history.csv'
         time = datetime.datetime.now().strftime('%d/%m/%Y %H:%M:%S')
@@ -96,4 +95,3 @@ def process_message(data):
         # Unexpected message - process as "msg_not_recognized" ERROR
         # print(f"ERROR - unexpected message type: {TcpMessage.parse(data).message}")
         logger.add_log_entry(logging.ERROR, f"ERROR - unexpected message type: {TcpMessage.parse(data).message}")
-

@@ -49,7 +49,7 @@ my_hostname = gethostname()
 my_ip = gethostbyname(gethostname())
 
 
-# Initialize transparency variable as a multiprocessing.Value
+# Initialize transparency_value variable as a multiprocessing.Value
 transparency = multiprocessing.Value('i', constants.TRANSPARENCY)
 
 
@@ -100,8 +100,8 @@ def create_tray_icon(exit_flag):
     action.triggered.connect(lambda: show_tray_message(tray))
     menu.addAction(action)
 
-    # Add the transparency widget menu item
-    transparency_action = QAction("Change message popup transparency")
+    # Add the transparency_value widget menu item
+    transparency_action = QAction("Change message popup transparency_value")
     transparency_action.triggered.connect(lambda: show_transparency_widget())
     menu.addAction(transparency_action)
 
@@ -154,23 +154,23 @@ def show_tray_icon():
 
 
 def show_transparency_widget():
-    # Create a separate process for the transparency widget
+    # Create a separate process for the transparency_value widget
     widget_process = multiprocessing.Process(target=create_transparency_widget, args=(transparency,))
     widget_process.start()
 
 
-def create_transparency_widget(transparency):
+def create_transparency_widget(transparency_value):
     # Create the Application object
     app = QApplication([])
 
-    # Load transparency value from a file, or use a default value
+    # Load transparency_value value from a conf_file, or use a default value
     try:
         with open('transparency.json') as file:
             transparency_value = json.load(file)
     except FileNotFoundError:
         transparency_value = constants.TRANSPARENCY
 
-    # Create the transparency widget
+    # Create the transparency_value widget
     widget = QWidget()
     widget.setWindowFlags(Qt.FramelessWindowHint)  # Remove window title
     widget.setAttribute(Qt.WA_StyledBackground)  # Enable styling for the widget
@@ -179,26 +179,26 @@ def create_transparency_widget(transparency):
     slider = QSlider(Qt.Horizontal)
     slider.setMinimum(0)
     slider.setMaximum(255)
-    slider.setValue(transparency_value)  # Set the initial value from the loaded transparency value
+    slider.setValue(transparency_value)  # Set the initial value from the loaded transparency_value value
 
     # Set the layout for the widget and add the slider
     layout = QVBoxLayout(widget)
     layout.addWidget(slider)
 
-    # Function to update the transparency of the widget
-    def update_transparency(value):
+    # Function to update the transparency_value of the widget
+    def update_widget_transparency(value):
         if value < 10:
             widget.setWindowOpacity((value + 10) / 255)
         else:
             widget.setWindowOpacity(value / 255)
-        transparency.value = value
+        transparency_value.value = value
 
-        # Update the stored transparency value in the file
-        with open('transparency.json', 'w') as file:
-            json.dump(value, file)
+        # Update the stored transparency_value value in the conf_file
+        with open('transparency.json', 'w') as conf_file:
+            json.dump(value, conf_file)
 
-    # Connect the slider's valueChanged signal to update_transparency
-    slider.valueChanged.connect(update_transparency)
+    # Connect the slider's valueChanged signal to update_widget_transparency
+    slider.valueChanged.connect(update_widget_transparency)
 
     # Create the close button
     close_button = QPushButton("Close")
@@ -243,7 +243,7 @@ def create_transparency_widget(transparency):
     else:
         widget.setWindowOpacity(transparency_value / 255)
 
-    # Start the application event loop for the transparency widget
+    # Start the application event loop for the transparency_value widget
     app.exec_()
 
 

@@ -32,7 +32,7 @@ def download_file(url, save_path):
         logger.add_log_entry(logging.INFO, f"New message file: {url} successfully downloaded to {save_path}")
     else:
         # print("Error downloading file.")
-        logger.add_log_entry(f"Error downloading file: {url}")
+        logger.add_log_entry(logging.ERROR, f"Error downloading file: {url}")
 
 
 def receive_and_play_new_message(caller_ip, asset):
@@ -67,4 +67,4 @@ def receive_and_play_new_message(caller_ip, asset):
         custom_popup.show_custom_popup(f"{datetime.datetime.now().strftime('%d/%m/%Y %H:%M:%S')}\nMissile alert - Go to shelter immediately!!!", 'rocket.png', "emergency_alarm.ogg")
 
     else:
-        logger.add_log_entry(f'Unexpected MESSAGE TYPE: {asset}')
+        logger.add_log_entry(logging.ERROR, f'Unexpected MESSAGE TYPE: {asset}')

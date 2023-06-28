@@ -49,6 +49,8 @@ def record_and_send_new_message(addr_list, msg_type):
         logger.add_log_entry(logging.INFO, f"'NEW_MESSAGE_IND' sent to station {station_address}")
 
 
+# ------------------------------------ Debugging UI block - enable for debug ---------------------------------
+#
 # Simple Tk GUI section as Usage Example - remain for debugging
 # def record_and_send():
 #     cast = cast_var.get()
@@ -92,3 +94,5 @@ def record_and_send_new_message(addr_list, msg_type):
 #
 # # Start GUI main loop
 # window.mainloop()
+#
+# ------------------------------------ Debugging UI block end -------------------------------------------------
