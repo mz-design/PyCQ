@@ -42,11 +42,7 @@ def create_custom_popup(message, image, sound_file):
         # visual popup to user
         popup.show()
         app.exec()
-        # delete audio file after message popup is closed
-        if os.path.exists(audio_file_path):
-            os.remove(audio_file_path)
-            # print(f"File '{asset}' deleted from MsgStore.")
-            logger.add_log_entry(logging.INFO, f"File '{audio_file_path}' deleted from MsgStore.")
+
     except Exception as e:
         print(f"Error: {e}")
         logger.add_log_entry(logging.ERROR, f"Exception: {e}")
@@ -56,3 +52,9 @@ def show_custom_popup(message, image, sound_file):
     popup_process = multiprocessing.Process(target=create_custom_popup, args=(message, image, sound_file))
     popup_process.start()
     popup_process.join()
+
+    # delete audio file after message popup is closed
+    if os.path.exists(sound_file):
+        os.remove(sound_file)
+        # print(f"File '{asset}' deleted from MsgStore.")
+        logger.add_log_entry(logging.INFO, f"File '{sound_file}' deleted from MsgStore.")
