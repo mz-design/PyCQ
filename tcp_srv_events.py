@@ -6,19 +6,20 @@
 # initial release: 31.05.2023 - MichaelZ
 # ------------------------------------------------------------------------------------------------------
 
-import constants
 import csv
-import csv_ops
-import new_msg_rcv
-import tcp_client
-from tcp_message import TcpMessage
-from announcer import gethostname, gethostbyname
-from station_data import StationData
-from history_data import HistoryData
-import keep_alive
 import datetime
 import logging
+
+import constants
+import csv_ops
+import keep_alive
+import new_msg_rcv
+import tcp_client
+from announcer import gethostname, gethostbyname
+from history_data import HistoryData
 from logger import Logger
+from station_data import StationData
+from tcp_message import TcpMessage
 
 # Initialize log
 logger = Logger(constants.LOG_FILE, level=constants.LOGGING_LEVEL)

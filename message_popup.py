@@ -6,12 +6,14 @@
 # initial release: 14.06.2023 - MichaelZ
 # ------------------------------------------------------------------------------------------------------
 
-from PySide6.QtWidgets import QLabel, QVBoxLayout, QHBoxLayout, QWidget, QPushButton, QSpacerItem, QSizePolicy
+import json
+
 from PySide6.QtCore import Qt, QSize
 from PySide6.QtGui import QPainter, QBrush, QColor, QPen, QIcon, QPixmap, QFont
+from PySide6.QtWidgets import QLabel, QVBoxLayout, QHBoxLayout, QWidget, QPushButton, QSpacerItem, QSizePolicy
+
 import audio
 import constants
-import json
 
 
 class RoundedMessageWindow(QWidget):

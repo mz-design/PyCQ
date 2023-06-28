@@ -6,13 +6,15 @@
 # initial release: 31.05.2023 - MichaelZ
 # ------------------------------------------------------------------------------------------------------
 
-import audio
-import requests
-import constants
 import datetime
-import custom_popup
-from socket import gethostname, gethostbyname
 import logging
+from socket import gethostname, gethostbyname
+
+import requests
+
+import audio
+import constants
+import custom_popup
 from logger import Logger
 
 # Initialize log

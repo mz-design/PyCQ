@@ -6,25 +6,27 @@
 # initial release: 30.05.2023 - MichaelZ
 # ---------------------------------------------------------------------------------------------------
 
-import os
-from PySide6.QtWidgets import QApplication, QSystemTrayIcon, QMenu, QWidget, QVBoxLayout, QSlider, QPushButton
-from PySide6.QtGui import QIcon, QAction
-from PySide6.QtCore import Qt
-import constants
+import json
 import logging
-from socket import gethostbyname, gethostname
+import multiprocessing
+import os
+import threading
 import time
-import csv_ops
-import tcp_client
-from tcp_message import TcpMessage
-import http_srv
+from socket import gethostbyname, gethostname
+
+from PySide6.QtCore import Qt
+from PySide6.QtGui import QIcon, QAction
+from PySide6.QtWidgets import QApplication, QSystemTrayIcon, QMenu, QWidget, QVBoxLayout, QSlider, QPushButton
+
 import cleanup
+import constants
+import csv_ops
+import http_srv
 import listener
+import tcp_client
 import tcp_server
 from logger import Logger
-import threading
-import multiprocessing
-import json
+from tcp_message import TcpMessage
 
 # Initialize logger
 logger = Logger(constants.LOG_FILE, level=constants.LOGGING_LEVEL)

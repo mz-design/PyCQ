@@ -6,15 +6,17 @@
 # initial release: 14.06.2023 - MichaelZ
 # ------------------------------------------------------------------------------------------------------
 
-from PyQt6.QtWidgets import QApplication
-import audio
-from message_popup import RoundedMessageWindow
-import threading
+import logging
 import multiprocessing
+import os
+import threading
+
+from PyQt6.QtWidgets import QApplication
+
+import audio
 import constants
 from logger import Logger
-import logging
-import os
+from message_popup import RoundedMessageWindow
 
 # Initialize logger
 logger = Logger(constants.LOG_FILE, level=constants.LOGGING_LEVEL)

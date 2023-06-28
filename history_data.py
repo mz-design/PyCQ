@@ -6,8 +6,9 @@
 # initial release: 31.05.2023 - MichaelZ
 # ---------------------------------------------------------------------------------------------
 
-import logging
 import ipaddress
+import logging
+
 import constants
 from logger import Logger
 

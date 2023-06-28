@@ -6,10 +6,11 @@
 # initial release: 30.05.2023 - MichaelZ
 # ---------------------------------------------------------------------------------------------
 
-import constants
-import threading
 import logging
 import socket
+import threading
+
+import constants
 import tcp_srv_events
 from logger import Logger
 

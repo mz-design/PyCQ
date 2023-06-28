@@ -6,23 +6,25 @@
 # initial release: 20.06.2023 - MichaelZ
 # ---------------------------------------------------------------------------------------------------
 
+import logging
+import os
+import socket
+import sys
+import threading
+import time
+
 from PyQt6 import QtCore, QtGui, QtWidgets
 from PyQt6.QtWidgets import QApplication, QMessageBox
-import sys
-import os
-import time
-import socket
+
+import announcer
 import audio
-import new_msg_send
+import cleanup
 import constants
 import csv_ops
 import http_srv
-import tcp_server
 import keep_alive
-import announcer
-import cleanup
-import threading
-import logging
+import new_msg_send
+import tcp_server
 from logger import Logger
 
 # Initialize logger

@@ -8,14 +8,16 @@
 # initial release: 28.05.2023 - MichaelZ
 # ---------------------------------------------------------------------------------------------
 
-import constants
+import datetime
+import logging
+import os
+import threading
+
 import sounddevice as sd
 import soundfile as sf
-import datetime
-import os
-import logging
-import threading
+
 import audio_dev
+import constants
 from logger import Logger
 
 # Initialize logger

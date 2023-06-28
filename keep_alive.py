@@ -6,15 +6,16 @@
 # initial release: 01.06.2023 - MichaelZ
 # ---------------------------------------------------------------------------------------------------
 import csv
-import constants
 import logging
 import time
+
+import cleanup
+import constants
 import csv_ops
 import tcp_client
-from tcp_message import TcpMessage
 from announcer import gethostbyname, gethostname
-import cleanup
 from logger import Logger
+from tcp_message import TcpMessage
 
 # Initialize logger
 logger = Logger(constants.LOG_FILE, level=constants.LOGGING_LEVEL)

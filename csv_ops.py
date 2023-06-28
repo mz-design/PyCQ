@@ -9,10 +9,11 @@
 
 import csv
 import logging
-import constants
 
+import constants
 # Initialize logger
 from logger import Logger
+
 logger = Logger(constants.LOG_FILE, level=constants.LOGGING_LEVEL)
 
 

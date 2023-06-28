@@ -7,13 +7,15 @@
 # initial release: 28.05.2023 - MichaelZ
 # -------------------------------------------------------------------------------------
 
-import constants
-import pyaudio
-from pycaw.pycaw import AudioUtilities, IAudioEndpointVolume
-from comtypes import CLSCTX_ALL
 import logging
-from logger import Logger
+
+import pyaudio
 import pythoncom
+from comtypes import CLSCTX_ALL
+from pycaw.pycaw import AudioUtilities, IAudioEndpointVolume
+
+import constants
+from logger import Logger
 
 # Initialize logger
 logger = Logger(constants.LOG_FILE, level=constants.LOGGING_LEVEL)

@@ -6,10 +6,11 @@
 # initial release: 30.05.2023 - MichaelZ
 # ---------------------------------------------------------------------------------------------
 
-import constants
 import http.server
-import socketserver
 import logging
+import socketserver
+
+import constants
 from logger import Logger
 
 # Initialize logging

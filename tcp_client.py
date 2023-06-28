@@ -6,9 +6,10 @@
 # initial release: 30.05.2023 - MichaelZ
 # ---------------------------------------------------------------------------------------------
 
-import constants
-import socket
 import logging
+import socket
+
+import constants
 from logger import Logger
 
 # Initialize logging

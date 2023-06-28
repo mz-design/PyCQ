@@ -6,9 +6,10 @@
 # initial release: 30.05.2023 - MichaelZ
 # ---------------------------------------------------------------------------------------------
 
-import constants
-from socket import socket, AF_INET, SOCK_DGRAM
 import logging
+from socket import socket, AF_INET, SOCK_DGRAM
+
+import constants
 from logger import Logger
 
 # Initialize logging

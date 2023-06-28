@@ -6,13 +6,15 @@
 # initial release: 31.05.2023 - MichaelZ
 # ------------------------------------------------------------------------------------------------------
 
+import logging
+
 import audio
 import constants
 import tcp_client
 from announcer import gethostname, gethostbyname
-from tcp_message import TcpMessage
-import logging
 from logger import Logger
+from tcp_message import TcpMessage
+
 # import tkinter as tk      # enable for debugging with simple Tk UI
 
 # Initialize log

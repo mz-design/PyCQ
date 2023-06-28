@@ -6,11 +6,13 @@
 # initial release: 30.05.2023 - MichaelZ
 # ---------------------------------------------------------------------------------------------------
 
-import constants
+import glob
 import logging
 import os
+
 import pandas as pd
-import glob
+
+import constants
 from logger import Logger
 
 # Initialize logger
