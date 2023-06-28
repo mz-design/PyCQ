@@ -54,7 +54,8 @@ def show_custom_popup(message, image, sound_file):
     popup_process.join()
 
     # delete audio file after message popup is closed
-    if os.path.exists(sound_file):
-        os.remove(sound_file)
-        # print(f"File '{asset}' deleted from MsgStore.")
+    audio_file_path = f"{constants.MESSAGE_STORE}/{sound_file}"
+    if os.path.exists(audio_file_path):
+        os.remove(audio_file_path)
+        # print(f"File '{sound_file}' deleted from MsgStore.")
         logger.add_log_entry(logging.INFO, f"File '{sound_file}' deleted from MsgStore.")
