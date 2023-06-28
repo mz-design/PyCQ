@@ -39,7 +39,7 @@ if not os.path.exists(constants.HISTORY):
 # Perform cleanups on startup
 cleanup.clean_log(constants.LOG_FILE, 0)
 cleanup.clean_pdf_file(constants.HISTORY, constants.HISTORY_MAX_ENTRIES)
-cleanup.clean_AudioFiles(f'{constants.MESSAGE_STORE}/', 0)
+cleanup.clean_AudioFiles(f'{constants.MESSAGE_STORE}/', constants.MESSAGE_STORE_MAX_FILES)
 
 # Get configuration from constants
 udp_port = constants.UDP_PORT
