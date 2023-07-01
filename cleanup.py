@@ -6,11 +6,10 @@
 # initial release: 30.05.2023 - MichaelZ
 # ---------------------------------------------------------------------------------------------------
 
+import csv
 import glob
 import logging
 import os
-
-import pandas as pd
 
 import constants
 from logger import Logger
@@ -42,19 +41,25 @@ def clean_AudioFiles(folder_path, num_to_keep):
 
 def clean_pdf_file(csv_file, num_to_keep):
     try:
-        # Read the CSV file into a pandas DataFrame
-        df = pd.read_csv(csv_file)
+        # Read the CSV file and get the rows
+        rows = []
+        with open(csv_file, 'r') as file:
+            csv_reader = csv.reader(file)
+            for row in csv_reader:
+                rows.append(row)
 
-        # Check if the DataFrame has enough entries to keep
-        if len(df) > num_to_keep:
+        # Check if the rows have enough entries to keep
+        if len(rows) > num_to_keep:
             # Identify the entries to be deleted
             if num_to_keep > 0:
-                entries_to_delete = df[:-num_to_keep]
+                entries_to_delete = rows[:-num_to_keep]
             else:
-                entries_to_delete = pd.DataFrame(columns=df.columns)  # Create an empty DataFrame with header
+                entries_to_delete = [rows[0]]  # Keep only the header row
 
             # Save the desired entries back to the CSV file
-            entries_to_delete.to_csv(csv_file, index=False)
+            with open(csv_file, 'w', newline='') as file:
+                csv_writer = csv.writer(file)
+                csv_writer.writerows(entries_to_delete)
 
             logger.add_log_entry(logging.INFO, f'History cleanup: Keep {num_to_keep} latest CSV entries')
         else:
@@ -62,8 +67,6 @@ def clean_pdf_file(csv_file, num_to_keep):
 
     except FileNotFoundError as e:
         logger.add_log_entry(logging.ERROR, f'File not found: {csv_file} - error {e}')
-    except pd.errors.EmptyDataError as e:
-        logger.add_log_entry(logging.ERROR, f'Empty data in CSV file: {csv_file} - error {e}')
     except Exception as e:
         logger.add_log_entry(logging.ERROR, f'Error during history cleanup: {str(e)}')
 
