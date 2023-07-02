@@ -157,7 +157,7 @@ def show_tray_icon():
 
 def show_transparency_widget():
     # Create a separate process for the transparency_value widget
-    widget_process = Process(target=create_transparency_widget, args=(transparency,))
+    widget_process = Process(target=create_transparency_widget)
     widget_process.start()
 
 
