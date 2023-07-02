@@ -66,7 +66,7 @@ def run_periodically(interval):
         logger.add_log_entry(logging.DEBUG, "Send periodic 'keep-alive' message")
         check_alive()
 
-        # clean-up log file on caller periodically (kind of 'log rotator)'
+        # clean-up log file on caller periodically (kind of 'log rotator')
         if cleanup_counter == constants.LOG_ROTATOR_COUNTER:
             logger.add_log_entry(logging.INFO, f"Periodic clean-up on clean-up counter {cleanup_counter}")
             cleanup.clean_log(constants.LOG_FILE, constants.LOG_MAX_LINES)

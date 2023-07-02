@@ -72,7 +72,7 @@ def run_periodically(interval, exit_flag):
     while not exit_flag.is_set():
         logger.add_log_entry(logging.DEBUG, "Periodic station Register started")
         print("periodic station register\n")
-        # clean-up log file on station periodically (kind of 'log rotator)'
+        # clean-up log file on station periodically (kind of 'log rotator')
         if cleanup_counter == constants.LOG_ROTATOR_COUNTER:
             logger.add_log_entry(logging.INFO, f"Periodic clean-up on clean-up counter {cleanup_counter}")
             cleanup.clean_log(constants.LOG_FILE, constants.LOG_MAX_LINES)

@@ -89,7 +89,7 @@ def voice_play(filename):
             audio_dev.spk_volume().SetMasterVolumeLevel(current_volume, None)
             logger.add_log_entry(logging.DEBUG, f"Restore master volume to stored value: {current_volume}")
 
-            # Unmute back all sound streams
+            # Remove mute back all sound streams
             audio_dev.unmute_all()
             logger.add_log_entry(logging.DEBUG, f"Un-mute all active sound sources")
 

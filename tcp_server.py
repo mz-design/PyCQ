@@ -20,7 +20,6 @@ logger = Logger(constants.LOG_FILE, level=constants.LOGGING_LEVEL)
 
 def handle_client(client_socket, client_address):
     # Exception handling with try-except block
-    received_message = ""
     try:
         # Handle the client connection
         # print(f"Accepted connection from: {client_address}")
