@@ -1,5 +1,5 @@
 # ---------------------------------------------------------------------------------------------------
-# caller_gui.py - 'Caller' procedures UI version
+# caller_gui.py - 'Caller' procedures GUI version
 #
 # Prerequisites: PyQt6 , PyQt6.QtWidgets
 #
@@ -27,6 +27,10 @@ import new_msg_send
 import tcp_server
 from logger import Logger
 
+# Open splash window when running in standalone 'exe' mode (import pyi_splash from pyinstaller)
+if getattr(sys, 'frozen', False):
+    import pyi_splash
+
 # Initialize logger
 logger = Logger(constants.LOG_FILE, level=constants.LOGGING_LEVEL)
 
@@ -52,9 +56,6 @@ announce_interval = constants.ANNOUNCE_INTERVAL
 tcp_port = constants.TCP_PORT
 keep_alive_interval = constants.KEEP_ALIVE_INTERVAL
 http_port = constants.HTTP_PORT
-
-# Start HTTP server
-# http_srv = http_srv.start_http_server(http_port)
 
 # Create thread objects for 'announce' and periodic keep alive
 thread_http_srv = threading.Thread(target=http_srv.start_http_server, args=(http_port,))
@@ -698,6 +699,11 @@ def main():
     app = QApplication(sys.argv)
     form = CallerApp()
     form.show()
+
+    # Close splash window when main form starts
+    if getattr(sys, 'frozen', False):
+        pyi_splash.close()
+
     sys.exit(app.exec())
 
 

@@ -1,5 +1,5 @@
 # ---------------------------------------------------------------------------------------------------
-# station.py - 'Station' procedures
+# station_gui.py - 'Station' GUI procedures
 #
 # Prerequisites: PySide6
 #
@@ -8,10 +8,10 @@
 
 import json
 import logging
-import multiprocessing
 import os
 import threading
 import time
+from multiprocessing import Process, freeze_support, Value
 from socket import gethostbyname, gethostname
 
 from PySide6.QtCore import Qt
@@ -52,7 +52,7 @@ my_ip = gethostbyname(gethostname())
 
 
 # Initialize transparency_value variable as a multiprocessing.Value
-transparency = multiprocessing.Value('i', constants.TRANSPARENCY)
+transparency = Value('i', constants.TRANSPARENCY)
 
 
 def update_transparency(value):
@@ -129,7 +129,7 @@ def create_tray_icon(exit_flag):
     thread_periodic_register.start()
 
     # Start the application event loop
-    app.exec_()
+    app.exec()
 
 
 def exit_application(exit_flag, tray):
@@ -145,23 +145,23 @@ def exit_application(exit_flag, tray):
 
 def show_tray_icon():
     # Create the exit flag as a global variable
-    exit_flag = multiprocessing.Event()
+    exit_flag = threading.Event()
 
-    # Create a process for the tray icon and start it
-    icon_process = multiprocessing.Process(target=create_tray_icon, args=(exit_flag,))
-    icon_process.start()
+    # Create thread for the tray icon and start it
+    icon_thread = threading.Thread(target=create_tray_icon, args=(exit_flag,))
+    icon_thread.start()
 
     # Wait for the tray icon process to finish
-    icon_process.join()
+    icon_thread.join()
 
 
 def show_transparency_widget():
     # Create a separate process for the transparency_value widget
-    widget_process = multiprocessing.Process(target=create_transparency_widget, args=(transparency,))
+    widget_process = Process(target=create_transparency_widget, args=(transparency,))
     widget_process.start()
 
 
-def create_transparency_widget(transparency_value):
+def create_transparency_widget():
     # Create the Application object
     app = QApplication([])
 
@@ -193,7 +193,7 @@ def create_transparency_widget(transparency_value):
             widget.setWindowOpacity((value + 10) / 255)
         else:
             widget.setWindowOpacity(value / 255)
-        transparency_value.value = value
+        create_transparency_widget.transparency_value = value
 
         # Update the stored transparency_value value in the conf_file
         with open('transparency.json', 'w') as conf_file:
@@ -250,4 +250,5 @@ def create_transparency_widget(transparency_value):
 
 
 if __name__ == '__main__':
+    freeze_support()
     show_tray_icon()
