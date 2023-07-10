@@ -4,18 +4,19 @@
 #
 # Prerequisites: pyaudio, pycaw, (for volume control), pywin32 for pythoncom
 #
-# initial release: 28.05.2023 - MichaelZ
+# Beta release: 10.07.2023 - MichaelZ
 # -------------------------------------------------------------------------------------
 
+import logging
+
+import pyaudio
+import pythoncom
+from comtypes import CLSCTX_ALL
+from pycaw.pycaw import AudioUtilities, IAudioEndpointVolume
 
 import constants
-import pyaudio
-from pycaw.pycaw import AudioUtilities, IAudioEndpointVolume
-from comtypes import CLSCTX_ALL
-import logging
 from logger import Logger
-import pythoncom
-from time import sleep
+
 # Initialize logger
 logger = Logger(constants.LOG_FILE, level=constants.LOGGING_LEVEL)
 
@@ -34,7 +35,7 @@ def find_input_device():
     for dev in range(dev_list):
         device = audio.get_device_info_by_index(dev)
         if device['maxInputChannels'] > 0 and any(name in device['name'].lower() for name in device_names):
-            print(f"Input device found: {device['name']} with id {dev}")
+            # print(f"Input device found: {device['name']} with id {dev}")
             input_device = dev
             logger.add_log_entry(logging.INFO, f"Found audio input: {device['name']} with id {dev}")
             break
@@ -48,7 +49,7 @@ def find_input_device():
         for dev in range(dev_list):
             device = audio.get_device_info_by_index(dev)
             if device['maxInputChannels'] > 0 and any(name in device['name'].lower() for name in device_names):
-                print(f"Input device found: {device['name']} with id {dev}")
+                # print(f"Input device found: {device['name']} with id {dev}")
                 input_device = dev
                 logger.add_log_entry(logging.INFO, f"Found audio input: {device['name']} with id {dev}")
                 break
@@ -75,7 +76,7 @@ def find_output_device():
     for dev in range(dev_list):
         device = audio.get_device_info_by_index(dev)
         if device['maxOutputChannels'] > 0 and any(name in device['name'].lower() for name in device_names):
-            print(f"Output device found: {device['name']} with id {dev}")
+            # print(f"Output device found: {device['name']} with id {dev}")
             output_device = dev
             logger.add_log_entry(logging.INFO, f"Found audio output: {device['name']} with id {dev}")
             break
@@ -89,7 +90,7 @@ def find_output_device():
         for dev in range(dev_list):
             device = audio.get_device_info_by_index(dev)
             if device['maxOutputChannels'] > 0 and any(name in device['name'].lower() for name in device_names):
-                print(f"Output device found: {device['name']} with id {dev}")
+                # print(f"Output device found: {device['name']} with id {dev}")
                 output_device = dev
                 logger.add_log_entry(logging.INFO, f"Found audio output: {device['name']} with id {dev}")
                 break
@@ -116,42 +117,25 @@ def spk_volume():
 
 
 def mute_all():                                 # Mute all audio streams except my own
-    # pythoncom.CoInitialize()
+    # pythoncom.CoInitialize()                  # Need only on 1-st pythoncom instance initialization
     sessions = AudioUtilities.GetAllSessions()                                  # Mute
     for session in sessions:
         volume = session.SimpleAudioVolume
-        if session.Process and session.Process.name() == "python.exe":
+        if session.Process and session.Process.name() in ("python.exe", "station.exe", "caller.exe"):
             volume.SetMute(0, None)
             volume.SetMasterVolume(1.0, None)
         else:                               # Mute all audio streams except my own
             volume.SetMasterVolume(0.0, None)
             volume.SetMute(1, None)
             # volume.SetMute(1, None)
-    # pythoncom.CoUninitialize()
+    # pythoncom.CoUninitialize()                # Need only on 1-st pythoncom instance initialization
 
-def unmute_all():                                      # Un-mute all
-    # pythoncom.CoInitialize()
+
+def unmute_all():                               # Unmute all
+    # pythoncom.CoInitialize()                  # Need only on 1-st pythoncom instance initialization
     sessions = AudioUtilities.GetAllSessions()
     for session in sessions:
         volume = session.SimpleAudioVolume
         volume.SetMute(0, None)
         volume.SetMasterVolume(1.0, None)
-    # pythoncom.CoUninitialize()
-
-# def set_volume(device_name, volume):
-#     devices = AudioUtilities.GetSpeakers()
-#     interface = devices.Activate(
-#         ISimpleAudioVolume._iid_,  # Use ISimpleAudioVolume interface
-#         None,
-#         None
-#     )
-#     interface.SetMasterVolume(volume, None)
-
-
-# TODO: remove these debug lines
-# find_input_device()
-# find_output_device()
-# mute_all()
-
-# TODO: Any more functionalities here? - TBD
-
+    # pythoncom.CoUninitialize()                # Need only on 1-st pythoncom instance initialization

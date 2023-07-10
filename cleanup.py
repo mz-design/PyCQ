@@ -1,16 +1,17 @@
 # ---------------------------------------------------------------------------------------------------
 # cleanup.py - Cleanup the 'MsgStore' folder, 'history.csv' and 'PyCQ.log' file to prevent oversizing
 #
-# Prerequisites: pandas
+# Prerequisites: none
 #
-# initial release: 30.05.2023 - MichaelZ
+# Beta release: 10.07.2023 - MichaelZ
 # ---------------------------------------------------------------------------------------------------
 
-import constants
+import csv
+import glob
 import logging
 import os
-import pandas as pd
-import glob
+
+import constants
 from logger import Logger
 
 # Initialize logger
@@ -38,21 +39,36 @@ def clean_AudioFiles(folder_path, num_to_keep):
         logger.add_log_entry(logging.ERROR, e)
 
 
-def clean_history(csv_file, num_to_keep):
+def clean_pdf_file(csv_file, num_to_keep):
     try:
-        # Read the CSV file into a pandas DataFrame
-        df = pd.read_csv(csv_file)
+        # Read the CSV file and get the rows
+        rows = []
+        with open(csv_file, 'r') as file:
+            csv_reader = csv.reader(file)
+            for row in csv_reader:
+                rows.append(row)
 
-        # Identify the entries to be deleted
-        last_entries = df[-num_to_keep:]
+        # Check if the rows have enough entries to keep
+        if len(rows) > num_to_keep:
+            # Identify the entries to be deleted
+            if num_to_keep > 0:
+                entries_to_delete = rows[:-num_to_keep]
+            else:
+                entries_to_delete = [rows[0]]  # Keep only the header row
 
-        # Save the desired entries back to the CSV file
-        last_entries.to_csv(csv_file, index=False)
+            # Save the desired entries back to the CSV file
+            with open(csv_file, 'w', newline='') as file:
+                csv_writer = csv.writer(file)
+                csv_writer.writerows(entries_to_delete)
 
-        logger.add_log_entry(logging.INFO, f'History cleanup: Keep {num_to_keep} latest CSV entries')
+            logger.add_log_entry(logging.INFO, f'History cleanup: Keep {num_to_keep} latest CSV entries')
+        else:
+            logger.add_log_entry(logging.INFO, 'No history cleanup needed. Not enough entries.')
 
-    except (FileNotFoundError, pd.errors.EmptyDataError) as e:
-        logger.add_log_entry(logging.ERROR, e)
+    except FileNotFoundError as e:
+        logger.add_log_entry(logging.ERROR, f'File not found: {csv_file} - error {e}')
+    except Exception as e:
+        logger.add_log_entry(logging.ERROR, f'Error during history cleanup: {str(e)}')
 
 
 def clean_log(log_file, num_to_keep):
@@ -70,15 +86,4 @@ def clean_log(log_file, num_to_keep):
         logger.add_log_entry(logging.INFO, f'Logfile cleanup: Keep {num_to_keep} latest log entries')
 
     except Exception as e:
-        logger.add_log_entry(logging.ERROR, e)
-
-
-# TODO: "remove usage example below after debug"
-# folder_path = "MsgStore/"
-# clean_AudioFiles(folder_path, num_to_keep=100)
-#
-# log_file = "pyCQ.log"
-# clean_log(log_file, num_to_keep=1000)
-#
-# csv_file = "history.csv"
-# clean_history(csv_file, num_to_keep=100)
+        logger.add_log_entry(logging.ERROR, f"Clean log file failed: {e}")

@@ -3,21 +3,23 @@
 #                       and responses
 # Prerequisites: None
 #
-# initial release: 31.05.2023 - MichaelZ
+# initial release: 10.07.2023 - MichaelZ
 # ------------------------------------------------------------------------------------------------------
 
-import constants
 import csv
-import csv_ops
-import new_msg_rcv
-import station_status
-import tcp_client
-from tcp_message import TcpMessage
-from announcer import gethostname, gethostbyname
-from station_data import StationData
-import keep_alive
+import datetime
 import logging
+
+import constants
+import csv_ops
+import keep_alive
+import new_msg_rcv
+import tcp_client
+from announcer import gethostname, gethostbyname
+from history_data import HistoryData
 from logger import Logger
+from station_data import StationData
+from tcp_message import TcpMessage
 
 # Initialize log
 logger = Logger(constants.LOG_FILE, level=constants.LOGGING_LEVEL)
@@ -65,8 +67,7 @@ def process_message(data):
 
     elif message == 'REGISTER_ACK':
         # update station status to 'online'
-        station_status.StationStatus = 'online'
-        logger.add_log_entry(logging.INFO, f"'REGISTER_ACK' received from 'Caller' - set station status ONLINE")
+        logger.add_log_entry(logging.INFO, f"'REGISTER_ACK' received from 'Caller' -  station status is ONLINE")
 
     elif message == 'NEW_MESSAGE_IND':
         # station_retrieve_message(asset)
@@ -76,9 +77,11 @@ def process_message(data):
         # send to remote station
         tcp_client.start_client(ip, constants.TCP_PORT, data)
 
-    # elif message == 'NEW_MESSAGE_ACK':
-        # Process 'NEW_MESSAGE_ACK' (on Caller) - mark message as 'delivered'
-        # caller_update_messge_status(status=read)
+    elif message == 'NEW_MESSAGE_ACK':
+        # Add new entry to 'history.csv'
+        time = datetime.datetime.now().strftime('%d/%m/%Y %H:%M:%S')
+        new_line = HistoryData(time, hostname, ip, asset)
+        csv_ops.append_to_csv(constants.HISTORY, HistoryData.get_data(new_line))
 
     elif message == 'KEEP_ALIVE_REQ':
         # Encode 'KEEP_ALIVE_ACK'
@@ -91,6 +94,5 @@ def process_message(data):
         keep_alive.alive = True
     else:
         # Unexpected message - process as "msg_not_recognized" ERROR
-        print(f"ERROR - unexpected message type: {TcpMessage.parse(data).message}")
+        # print(f"ERROR - unexpected message type: {TcpMessage.parse(data).message}")
         logger.add_log_entry(logging.ERROR, f"ERROR - unexpected message type: {TcpMessage.parse(data).message}")
-

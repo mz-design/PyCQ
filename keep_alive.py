@@ -3,21 +3,20 @@
 #
 # Prerequisites: None
 #
-# initial release: 01.06.2023 - MichaelZ
+# Beta release: 10.07.2023 - MichaelZ
 # ---------------------------------------------------------------------------------------------------
+
 import csv
-import constants
-# import threading
 import logging
 import time
-from ping3 import ping, verbose_ping
+
+import cleanup
+import constants
 import csv_ops
 import tcp_client
-from tcp_message import TcpMessage
 from announcer import gethostbyname, gethostname
-# import cleanup
-# import tcp_server
 from logger import Logger
+from tcp_message import TcpMessage
 
 # Initialize logger
 logger = Logger(constants.LOG_FILE, level=constants.LOGGING_LEVEL)
@@ -25,17 +24,8 @@ logger = Logger(constants.LOG_FILE, level=constants.LOGGING_LEVEL)
 my_hostname = gethostname()
 my_ip = gethostbyname(gethostname())
 
+# Initialize 'alive' variable
 alive = False
-
-
-def send_ping(destination):
-    response_time = ping(destination)
-    if response_time is not None:
-        print(f"Received response from {destination} in {response_time:.3f} ms")
-        return True
-    else:
-        print(f"No response from {destination}")
-        return False
 
 
 def check_alive():
@@ -47,22 +37,20 @@ def check_alive():
     for row in rows:
         ip = row['IP']
         hostname = row['HOSTNAME']
-        if not send_ping(ip):   # station host is down - remove entry from the list (we need it to debug)
-            logger.add_log_entry(logging.ERROR, f'Station host {hostname} with IP: {ip} is DOWN - remove entry')
+
+        # Encode 'KEEP_ALIVE_REQ' signal
+        data = TcpMessage.create(TcpMessage(my_ip, my_hostname, 'KEEP_ALIVE_REQ', ''))
+
+        # send to remote station
+        tcp_client.start_client(ip, constants.TCP_PORT, data)
+
+        # wait a moment for 'alive' flag update...
+        time.sleep(0.05)
+        if not alive:       # check 'alive' failed - remove entry
+            logger.add_log_entry(logging.INFO, f'Station {hostname} with IP: {ip} keep alive fail - remove entry')
+
             # remove this row from .csv
             rows = [r for r in rows if r != row]
-        else:                   # Station host is up - check the 'station' process is alive (we also need it to debug)
-            logger.add_log_entry(logging.INFO, f'Station host {hostname} with IP: {ip} is UP - check process alive')
-            # Encode 'KEEP_ALIVE_REQ' signal
-            data = TcpMessage.create(TcpMessage(my_ip, my_hostname, 'KEEP_ALIVE_REQ', ''))
-            # send to remote station
-            tcp_client.start_client(ip, constants.TCP_PORT, data)
-            # wait a moment for 'alive' flag update...
-            time.sleep(0.05)
-            if not alive:       # check 'alive' failed - remove entry
-                logger.add_log_entry(logging.INFO, f'Station {hostname} with IP: {ip} keep alive fail - remove entry')
-                # remove this row from .csv
-                rows = [r for r in rows if r != row]
 
     # Write changes to stations.csv file
     fieldnames = ['IP', 'HOSTNAME']
@@ -74,7 +62,16 @@ def check_alive():
 
 
 def run_periodically(interval):
+    cleanup_counter = 0
     while True:
-        print('periodic keep alive')      # TODO: remove this print after debug
+        logger.add_log_entry(logging.DEBUG, "Send periodic 'keep-alive' message")
         check_alive()
+
+        # clean-up log file on caller periodically (kind of 'log rotator')
+        if cleanup_counter == constants.LOG_ROTATOR_COUNTER:
+            logger.add_log_entry(logging.INFO, f"Periodic clean-up on clean-up counter {cleanup_counter}")
+            cleanup.clean_log(constants.LOG_FILE, constants.LOG_MAX_LINES)
+            cleanup_counter = 0
+        cleanup_counter += 1
         time.sleep(interval)
+

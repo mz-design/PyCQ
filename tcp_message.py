@@ -3,14 +3,15 @@
 #
 # Prerequisites: None
 #
-# initial release: 31.05.2023 - MichaelZ
+# Beta release: 10.07.2023 - MichaelZ
 # ------------------------------------------------------------------------------------------------------
 
 import logging
+
 import constants
+from logger import Logger
 
 # Initialize log
-from logger import Logger
 logger = Logger(constants.LOG_FILE, level=constants.LOGGING_LEVEL)
 
 
@@ -45,7 +46,6 @@ class TcpMessage:
             logger.add_log_entry(logging.ERROR, f"TcpMessage - Error parsing data string: {e}")
 
 
-# TODO: Remove usage examples below after debugging
 # Usage examples of class:
 # received_data_string = "Sender IP: 192.168.0.1\nSender Hostname: myhostname\nMessage: Hello, TCP!"
 # received_message = TcpMessage.parse(received_data_string)
