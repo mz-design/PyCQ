@@ -3,15 +3,15 @@
 #
 # Prerequisites: None
 #
-# initial release: 31.05.2023 - MichaelZ
+# Beta release: 10.07.2023 - MichaelZ
 # ------------------------------------------------------------------------------------------------------
 
 import logging
 
 import constants
-# Initialize log
 from logger import Logger
 
+# Initialize log
 logger = Logger(constants.LOG_FILE, level=constants.LOGGING_LEVEL)
 
 

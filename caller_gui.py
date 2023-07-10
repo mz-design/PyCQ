@@ -3,7 +3,7 @@
 #
 # Prerequisites: PyQt6 , PyQt6.QtWidgets
 #
-# initial release: 20.06.2023 - MichaelZ
+# Beta release: 10.07.2023 - MichaelZ
 # ---------------------------------------------------------------------------------------------------
 
 import logging
@@ -31,17 +31,19 @@ from logger import Logger
 if getattr(sys, 'frozen', False):
     import pyi_splash
 
+# When run in python environment check all files present in root directory
+else:
+    # initialize data stores, check if exists and create when needed
+    directory = constants.MESSAGE_STORE
+    if not os.path.exists(directory):
+        os.makedirs(directory)
+    if not os.path.exists(constants.STATIONS):
+        csv_ops.open_csv_file(constants.STATIONS)
+    if not os.path.exists(constants.HISTORY):
+        csv_ops.open_csv_file(constants.HISTORY)
+
 # Initialize logger
 logger = Logger(constants.LOG_FILE, level=constants.LOGGING_LEVEL)
-
-# initialize data stores, check if exists and create when needed
-directory = constants.MESSAGE_STORE
-if not os.path.exists(directory):
-    os.makedirs(directory)
-if not os.path.exists(constants.STATIONS):
-    csv_ops.open_csv_file(constants.STATIONS)
-if not os.path.exists(constants.HISTORY):
-    csv_ops.open_csv_file(constants.HISTORY)
 
 # perform cleanups on startup
 cleanup.clean_log(constants.LOG_FILE, 0)
@@ -708,4 +710,8 @@ def main():
 
 
 if __name__ == '__main__':
+    # This check needed for freezing support (pyinstaller)
+    if getattr(sys, 'frozen', False):
+        os.chdir(sys._MEIPASS)
+
     main()

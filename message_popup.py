@@ -3,20 +3,28 @@
 #
 # Prerequisites: PySide6.QtWidgets, PySide6.QtCore, PySide6.QtGui
 #
-# initial release: 14.06.2023 - MichaelZ
+# Beta release: 10.07.2023 - MichaelZ
 # ------------------------------------------------------------------------------------------------------
 
 import json
+import logging
+import random
 
 from PySide6.QtCore import Qt, QSize
 from PySide6.QtGui import QPainter, QBrush, QColor, QPen, QIcon, QPixmap, QFont
-from PySide6.QtWidgets import QLabel, QVBoxLayout, QHBoxLayout, QWidget, QPushButton, QSpacerItem, QSizePolicy
+from PySide6.QtWidgets import QLabel, QVBoxLayout, QHBoxLayout, QWidget, QPushButton, QSpacerItem, QSizePolicy, \
+    QApplication
 
 import audio
 import constants
+from logger import Logger
+
+# Initialize logger
+logger = Logger(constants.LOG_FILE, level=constants.LOGGING_LEVEL)
 
 
 class RoundedMessageWindow(QWidget):
+
     def __init__(self, message, image_path, audio_filename):
         super().__init__()
         self.setWindowFlags(Qt.Window | Qt.FramelessWindowHint | Qt.WindowStaysOnTopHint)
@@ -64,6 +72,18 @@ class RoundedMessageWindow(QWidget):
         self.setFixedSize(500, 500)
 
         self.drag_position = None
+
+    def showEvent(self, event):
+        super().showEvent(event)
+
+        # Randomize the position of the window
+        screen = QApplication.primaryScreen()
+        screen_geometry = screen.availableGeometry()
+        popup_width = self.width()
+        popup_height = self.height()
+        popup_x = random.randint(0, screen_geometry.width() - popup_width)
+        popup_y = random.randint(0, screen_geometry.height() - popup_height)
+        self.move(popup_x, popup_y)
 
     @staticmethod
     def setCustomImage(label, image_path):
@@ -139,4 +159,4 @@ class CloseButton(QPushButton):
 
 def play_file(filename):
     audio.voice_play(filename)
-    print(f"Playing file: {filename}")
+    logger.add_log_entry(logging.INFO, f"Playing file: {filename}")

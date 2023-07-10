@@ -5,10 +5,11 @@
 #
 # Prerequisites: sounddevice, soundfile, numpy
 #
-# initial release: 28.05.2023 - MichaelZ
+# Beta release: 28.05.2023 - MichaelZ
 # ---------------------------------------------------------------------------------------------
 
 import datetime
+import json
 import logging
 import os
 import threading
@@ -75,8 +76,14 @@ def voice_play(filename):
             audio_dev.mute_all()
             logger.add_log_entry(logging.DEBUG, f"Mute all sound sources except my one")
 
+            # Load volume value from a file, or use a default value
+            try:
+                with open('volume.json') as file:
+                    volume_value = json.load(file)
+            except FileNotFoundError:
+                volume_value = constants.OUTPUT_VOLUME
             # set desired master volume for playback
-            audio_dev.spk_volume().SetMasterVolumeLevel(constants.OUTPUT_VOLUME, None)
+            audio_dev.spk_volume().SetMasterVolumeLevel(volume_value, None)
             logger.add_log_entry(logging.DEBUG, f"Set playback volume to {constants.OUTPUT_VOLUME}")
 
             # play audio

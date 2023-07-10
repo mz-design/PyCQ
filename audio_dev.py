@@ -4,7 +4,7 @@
 #
 # Prerequisites: pyaudio, pycaw, (for volume control), pywin32 for pythoncom
 #
-# initial release: 28.05.2023 - MichaelZ
+# Beta release: 10.07.2023 - MichaelZ
 # -------------------------------------------------------------------------------------
 
 import logging
@@ -121,7 +121,7 @@ def mute_all():                                 # Mute all audio streams except 
     sessions = AudioUtilities.GetAllSessions()                                  # Mute
     for session in sessions:
         volume = session.SimpleAudioVolume
-        if session.Process and session.Process.name() == "python.exe":
+        if session.Process and session.Process.name() in ("python.exe", "station.exe", "caller.exe"):
             volume.SetMute(0, None)
             volume.SetMasterVolume(1.0, None)
         else:                               # Mute all audio streams except my own

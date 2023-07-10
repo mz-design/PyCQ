@@ -3,7 +3,7 @@
 #
 # Prerequisites: None
 #
-# initial release: 31.05.2023 - MichaelZ
+# Beta release: 10.07.2023 - MichaelZ
 # ------------------------------------------------------------------------------------------------------
 
 import logging

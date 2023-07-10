@@ -3,7 +3,7 @@
 #
 # Prerequisites: None
 #
-# initial release: 31.05.2023 - MichaelZ
+# Beta release: 10.07.2023 - MichaelZ
 # ------------------------------------------------------------------------------------------------------
 
 import logging
@@ -35,6 +35,7 @@ AUDIO_TYPE = '.ogg'              # Supported file types are: '.wav', '.flac' and
 OUTPUT_VOLUME = -3.3             # Desired output audio device volume setting in dB (valid range -61.0 -0.0) default -3.3 (~80% of maximum)
 PLAY_C2A = True                  # Play 'call to attention' preamble sound before playing new voice message [default = True]
 C2A_FILE = 'c2a.ogg'
+ALERT_SOUND = 'emergency_alarm.ogg'
 
 # Files and folders
 
@@ -48,6 +49,7 @@ STATIONS = 'stations.csv'
 # GUI settings
 
 TRAY_ICON = 'resources/icon.png'
-TRANSPARENCY = 255  # Default value
-
-
+TRANSPARENCY = 255                       # Default value
+ENABLE_CHANGE_TRANSPARENCY = True        # When False slider popup transparency control in station will be disabled and user will be forced default value
+ENABLE_CHANGE_VOLUME = True              # When False slider volume control in station will be disabled and user will be forced to OUTPUT_VOLUME value
+ENABLE_EXIT = True                       # When False 'Exit' option in station disabled (user cannot exit application)

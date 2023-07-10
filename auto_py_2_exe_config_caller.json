@@ -80,6 +80,22 @@
   {
    "optionDest": "argv_emulation",
    "value": false
+  },
+  {
+   "optionDest": "datas",
+   "value": "C:/Work/Course Python AI/Final Project/PyCQ/MsgStore;MsgStore/."
+  },
+  {
+   "optionDest": "datas",
+   "value": "C:/Work/Course Python AI/Final Project/PyCQ/resources;resources/."
+  },
+  {
+   "optionDest": "datas",
+   "value": "C:/Work/Course Python AI/Final Project/PyCQ/history.csv;."
+  },
+  {
+   "optionDest": "datas",
+   "value": "C:/Work/Course Python AI/Final Project/PyCQ/stations.csv;."
   }
  ],
  "nonPyinstallerOptions": {

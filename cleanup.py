@@ -1,9 +1,9 @@
 # ---------------------------------------------------------------------------------------------------
 # cleanup.py - Cleanup the 'MsgStore' folder, 'history.csv' and 'PyCQ.log' file to prevent oversizing
 #
-# Prerequisites: pandas
+# Prerequisites: none
 #
-# initial release: 30.05.2023 - MichaelZ
+# Beta release: 10.07.2023 - MichaelZ
 # ---------------------------------------------------------------------------------------------------
 
 import csv

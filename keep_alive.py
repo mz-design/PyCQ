@@ -3,8 +3,9 @@
 #
 # Prerequisites: None
 #
-# initial release: 01.06.2023 - MichaelZ
+# Beta release: 10.07.2023 - MichaelZ
 # ---------------------------------------------------------------------------------------------------
+
 import csv
 import logging
 import time

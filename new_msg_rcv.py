@@ -3,7 +3,7 @@
 #
 # Prerequisites: requests
 #
-# initial release: 31.05.2023 - MichaelZ
+# Beta release: 10.07.2023 - MichaelZ
 # ------------------------------------------------------------------------------------------------------
 
 import datetime
@@ -14,7 +14,7 @@ import requests
 
 import audio
 import constants
-import custom_popup
+import station_gui
 from logger import Logger
 
 # Initialize log
@@ -26,7 +26,7 @@ my_ip = gethostbyname(gethostname())
 
 def download_file(url, save_path):
     response = requests.get(url)
-    print(response)
+    # print(response)
     if response.status_code == 200:
         with open(save_path, 'wb') as file:
             file.write(response.content)
@@ -51,22 +51,32 @@ def receive_and_play_new_message(caller_ip, asset):
             audio.voice_play(f'{constants.RESOURCE_FOLDER}/{constants.C2A_FILE}')
 
         # show custom popup and play audio message from file
-        custom_popup.show_custom_popup(f"New Voice Message    {datetime.datetime.now().strftime('%d/%m/%Y %H:%M:%S')}",
-                                       'message-icon.png', asset)
+        station_gui.show_custom_popup(f"New Voice Message    {datetime.datetime.now().strftime('%d/%m/%Y %H:%M:%S')}",
+                                      'message-icon.png', asset)
     elif asset == "fire_alert":
-        custom_popup.show_custom_popup(f"{datetime.datetime.now().strftime('%d/%m/%Y %H:%M:%S')}\nFire alert - immediately proceed to emergency exit !!!", 'fire_alert.png', "emergency_alarm.ogg")
+        station_gui.show_custom_popup(
+            f"{datetime.datetime.now().strftime('%d/%m/%Y %H:%M:%S')}\nFire alert - immediately proceed to emergency exit !!!",
+            'fire_alert.png', constants.ALERT_SOUND)
 
     elif asset == "earthquake_alert":
-        custom_popup.show_custom_popup(f"{datetime.datetime.now().strftime('%d/%m/%Y %H:%M:%S')}\nEarthquake - immediately leave the building !!!", 'earthquake_alert.png', "emergency_alarm.ogg")
+        station_gui.show_custom_popup(
+            f"{datetime.datetime.now().strftime('%d/%m/%Y %H:%M:%S')}\nEarthquake - immediately leave the building !!!",
+            'earthquake_alert.png', constants.ALERT_SOUND)
 
     elif asset == "tsunami_alert":
-        custom_popup.show_custom_popup(f"{datetime.datetime.now().strftime('%d/%m/%Y %H:%M:%S')}\nTsunami - immediately proceed to evacuation !!!", 'tsunami_alert.png', "emergency_alarm.ogg")
+        station_gui.show_custom_popup(
+            f"{datetime.datetime.now().strftime('%d/%m/%Y %H:%M:%S')}\nTsunami - immediately proceed to evacuation !!!",
+            'tsunami_alert.png', constants.ALERT_SOUND)
 
     elif asset == "intruder_alert":
-        custom_popup.show_custom_popup(f"{datetime.datetime.now().strftime('%d/%m/%Y %H:%M:%S')}\nIntruder alert - follow security procedures !!!", 'intruder_alert.png', "emergency_alarm.ogg")
+        station_gui.show_custom_popup(
+            f"{datetime.datetime.now().strftime('%d/%m/%Y %H:%M:%S')}\nIntruder alert - follow security procedures !!!",
+            'intruder_alert.png', constants.ALERT_SOUND)
 
     elif asset == "missile_alert":
-        custom_popup.show_custom_popup(f"{datetime.datetime.now().strftime('%d/%m/%Y %H:%M:%S')}\nMissile alert - Go to shelter immediately!!!", 'rocket.png', "emergency_alarm.ogg")
+        station_gui.show_custom_popup(
+            f"{datetime.datetime.now().strftime('%d/%m/%Y %H:%M:%S')}\nMissile alert - Go to shelter immediately!!!",
+            'rocket.png', constants.ALERT_SOUND)
 
     else:
         logger.add_log_entry(logging.ERROR, f'Unexpected MESSAGE TYPE: {asset}')
