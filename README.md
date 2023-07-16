@@ -100,6 +100,8 @@ Use ‘pyinstaller’ app to ‘freeze’ python code to standalone ‘.exe’ f
 You can also use “Inno Setup” or “InstallShield” to compile windows installation file from this exe.
 GitHub link: https://github.com/mz-design/PyCQ
 
+Alternatively you can dawnload compiled applications at https://drive.google.com/drive/folders/13HQtb6TAIbM6Tfcey9NqujX9m3nG7wpP (see details in Q&A section 10)
+
 # Testing:
 All application modules were unit-tested prior delivery. Performed system test with 5 PCs (caller + 4 stations) – personal environment limitation (I have only 5 inhouse…)  😊
 Tested with Win-10 and Win-11 as well both ‘home’ and ‘Pro’ editions
@@ -117,4 +119,10 @@ No specific issues were observed during short testing period
 7.	**How do I configure pop-up transparency and sound volume on Station app?**  - Right click application tray icon to open its context menu.
 8.	**Where is the message in ‘MsgStore/’ of  station after I closed the popup?**  - You can replay the message as much as you wish whilst the popup exists. Closing popup will inform the Caller the message was “read” and it will remain in his message history, but station will delete it – it’s “by design”.
 9.	**When I re-start standalone ‘.exe’ file there are no messages in message history and MsgStore folder is empty?** – Yes, this is the way the ‘frozen’ code works. Executable creates all data including /MsgStore/ and /resources/ folders as well as .csv files in Temporary folder when it started for this reason it can’t save the files from previous session. When you running native code in python project (i.e., PyCharm) you will continue working with same files and folder after restart.
-10.	**How do I install it?** - Use setup files it will install everything automatically, or just place ‘.exe’ file in folder you want to run it from. Important! – on first application run don’t forget to check both ‘v’ in Windows Defender Firewall popup that will appear. If you want starting Station app on system start, just copy shortcut to ‘station.exe’ to windows startup folder.
+10.	**How do I install it?** - Use setup files it will install everything automatically, or just place ‘.exe’ file in folder you want to run it from. Important! – on first application run don’t forget to check both ‘v’ in Windows Defender Firewall popup that will appear. If you want starting "Station" app on system start, just copy shortcut to ‘station.exe’ to windows startup folder.
+11. You need downloading and extract archives from https://drive.google.com/drive/folders/13HQtb6TAIbM6Tfcey9NqujX9m3nG7wpP . 
+Archive files password is **mzdesign**.
+12. Two options are available: standalone .exe files to be placed at any suitable folder on your drive or Windows installers to install specific application in "C:\Users\**user_directory**\AppData\Local\Programs\". (The installers also provide option to install application for all Windows users).
+13. PyCQ_Station_Admin_Setup will install the station application example precompiled with 2 "Administrative restrictions" in GUI: User cannot change the default volume (80%) and "Exit" button is disabled.
+14. Please keep in mind station and caller applications sharing the same resource files and libraries, so you can run only one instance of application at time (i.e. specific PC may act as Caller or Station, but not both together!).
+15. When running applications or installers first time there is a possibility 'Windows Defender' or other antivirus installed false alerting on specific malware: **Trojan:Win32/Wacatac.B!ml** - specific is false alert caused by improper handling of pyinstaller generated files by antivirus software (https://github.com/pyinstaller/pyinstaller/issues/5854). You can be absolutely confident, all executables were throughly checked for malware of any kind as well as you welcome reviewing source code and asking pyinstaller staff 😊
